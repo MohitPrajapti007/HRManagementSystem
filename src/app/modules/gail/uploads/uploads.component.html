@@ -1,0 +1,329 @@
+<div *ngIf="uploadNewFile">
+<div class="row">
+  <div class="col">
+    <mat-card>
+      <mat-card-content>
+              <div class="row mb-2 text-danger" *ngIf="message"><div class="col-6">{{ message }}</div></div>
+        <form [formGroup]="myForm" (ngSubmit)="submitForm(myForm.value)" novalidate>
+          <div class="row">
+            <div class="col-2"><label>Process Identifier</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <input matInput placeholder="Name/Identifier for this working set" formControlName="detail" required>
+                <mat-error *ngIf="(f['detail'].invalid && (f['detail'].dirty || f['detail'].touched)) && errorHandling('detail', 'required')">Tag Name is required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-2"><label>Emp Details</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <div>
+                  <mat-toolbar>
+                    <!-- Display files names -->
+                    <input matInput readonly formControlName="empDetailFile" name="name" />
+                    <!-- Browse Button -->
+                    <button mat-flat-button color="primary">Browse File</button>
+                  </mat-toolbar>
+                  <!-- Fetch selected filed on change -->
+                  <input type="file" #empfileInput id="uploadFile" class="uploadFile" (change)="uploadFileEvt($event, '1')"
+                    name="uploadFile" accept=".csv" required/>
+                </div>
+                <mat-error *ngIf="errorHandling('empDetailFile', 'required')">
+                  You must select a <strong>file</strong>
+                </mat-error>
+              </mat-form-field>
+              <a href="assets/Templates/masterdatatemplate.csv">Download Template</a>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-2"><label>Compulsory Transfer List</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <div>
+                  <mat-toolbar>
+                    <!-- Display files names -->
+                    <input matInput readonly formControlName="locDetailFile" name="name" />
+                    <!-- Browse Button -->
+                    <button mat-flat-button color="primary">Browse File</button>
+                  </mat-toolbar>
+                  <!-- Fetch selected filed on change -->
+                  <input type="file" #locfileInput id="uploadFile2" class="uploadFile" (change)="uploadFileEvt($event, '2')"
+                    name="uploadFile2" accept=".csv" />
+                </div>
+              </mat-form-field>
+              <a href="assets/Templates/compulsory-transfer-list.csv">Download Template</a>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-2"><label>Mobility Constraints List</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <div>
+                  <mat-toolbar>
+                    <!-- Display files names -->
+                    <input matInput readonly formControlName="mobilityConstraintsDetailFile" name="name" />
+                    <!-- Browse Button -->
+                    <button mat-flat-button color="primary">Browse File</button>
+                  </mat-toolbar>
+                  <!-- Fetch selected filed on change -->
+                  <input type="file" #mobilityConstraintsDetailFileInput id="uploadFile3" class="uploadFile"
+                    (change)="uploadFileEvt($event, '3')" name="uploadFile3" accept=".csv" />
+                </div>
+              </mat-form-field>
+              <a href="assets/Templates/master-data-mobility-constraints.csv">Download Template</a>
+            </div>
+          </div>
+
+          
+          <div class="row">
+            <div class="col-2"><label>Sensitive Position List</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <div>
+                  <mat-toolbar>
+                    <!-- Display files names -->
+                    <input matInput readonly formControlName="sensitivePositionFile" name="name" />
+                    <!-- Browse Button -->
+                    <button mat-flat-button color="primary">Browse File</button>
+                  </mat-toolbar>
+                  <!-- Fetch selected filed on change -->
+                  <input type="file" #sensitivePositionFileInput id="uploadFile4" class="uploadFile"
+                    (change)="uploadFileEvt($event, '4')" name="uploadFile4" accept=".csv" />
+                </div>
+              </mat-form-field>
+              <a href="assets/Templates/master-data-sensitive-position.csv">Download Template</a>
+            </div>
+          </div>
+
+          
+          <div class="row">
+            <div class="col-2"><label>TPC</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <div>
+                  <mat-toolbar>
+                    <!-- Display files names -->
+                    <input matInput readonly formControlName="tpcFile" name="name" />
+                    <!-- Browse Button -->
+                    <button mat-flat-button color="primary">Browse File</button>
+                  </mat-toolbar>
+                  <!-- Fetch selected filed on change -->
+                  <input type="file" #tpcFileInput id="uploadFile6" class="uploadFile"
+                    (change)="uploadFileEvt($event, '5')" name="uploadFile6" accept=".csv" />
+                </div>
+              </mat-form-field>
+              <a href="assets/Templates/master-data-tpc.csv">Download Template</a>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-2"><label>Manning Information</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <div>
+                  <mat-toolbar>
+                    <!-- Display files names -->
+                    <input matInput readonly formControlName="plManningFile" name="name" />
+                    <!-- Browse Button -->
+                    <button mat-flat-button color="primary">Browse File</button>
+                  </mat-toolbar>
+                  <!-- Fetch selected filed on change -->
+                  <input type="file" #tpcFileInput id="uploadFile5" class="uploadFile"
+                    (change)="uploadFileEvt($event, '6')" name="uploadFile" accept=".csv" />
+                </div>
+              </mat-form-field>
+              <a href="assets/Templates/given-manning.csv">Download Template</a>
+              
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2"><label>Mutual Transfer</label></div>
+            <div class="col-10">
+              <mat-form-field class="p-0 m-0" appearance="outline">
+                <div>
+                  <mat-toolbar>
+                    <!-- Display files names -->
+                    <input matInput readonly formControlName="mutualTransFile" name="name" />
+                    <!-- Browse Button -->
+                    <button mat-flat-button color="primary">Browse File</button>
+                  </mat-toolbar>
+                  <!-- Fetch selected filed on change -->
+                  <input type="file" #mtFileInput id="uploadFile9" class="uploadFile"
+                    (change)="uploadFileEvt($event, '9')" name="uploadFile" accept=".csv" />
+                </div>
+              </mat-form-field>
+              <a href="assets/Templates/mutual-transfer.csv">Download Template</a>
+              
+            </div>
+          </div>
+
+          <div class="button-wrapper">
+            <button mat-flat-button color="primary">Submit</button>
+            <button mat-flat-button color="warn" type="button" (click)="resetform()" style="margin-left: 10px;">Reset</button>            
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>
+</div>
+<!-- <div>
+    <mat-toolbar *ngIf="currentFile" class="progress-bar">
+      <mat-progress-bar color="accent" [value]="progress"></mat-progress-bar>
+      <span class="progress">{{ progress }}%</span>
+    </mat-toolbar>
+  
+    <mat-form-field>
+      <div>
+        <mat-toolbar>
+          <input matInput [value]="fileName" />
+  
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!currentFile"
+            (click)="upload()"
+          >
+            Upload
+          </button>
+        </mat-toolbar>
+  
+        <input
+          type="file"
+          id="fileInput"
+          (change)="selectFile($event)"
+          name="fileInput"
+        />
+      </div>
+    </mat-form-field>
+  </div> -->
+<div *ngIf="!uploadNewFile">
+  <div class="row">
+    <div class="col">
+      <mat-card>
+        <mat-card-content>
+          <form [formGroup]="oldFileForm" (ngSubmit)="submitOldFileForm(oldFileForm.value)" novalidate>
+            <div class="row">
+              <div class="col-2"><label>APE List Name:</label></div>
+              <div class="col-10">
+                <mat-form-field class="p-0 m-0" appearance="outline">
+                  <input matInput placeholder="Enter List Name" formControlName="detail" required>
+                  <mat-error *ngIf="(of['detail'].invalid && (of['detail'].dirty || of['detail'].touched)) && errorHandlingOf('detail', 'required')">List Name is required</mat-error>
+                </mat-form-field>
+                
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-2"><label>Update Grade</label></div>
+              <div class="col-10">
+                <mat-form-field class="p-0 m-0" appearance="outline">
+                  <div>
+                    <mat-toolbar>
+                      <!-- Display files names -->
+                      <input matInput readonly formControlName="gradeFile" name="name" />
+                      <!-- Browse Button -->
+                      <button mat-flat-button color="primary">Browse File</button>
+                    </mat-toolbar>
+                    <!-- Fetch selected filed on change -->
+                    <input type="file" #gradeFileInput id="uploadFile7" class="uploadFile"
+                      (change)="uploadFileEvt($event, '7')" name="uploadFile" accept=".csv" />
+                  </div>
+                </mat-form-field>
+                <a href="assets/Templates/grade-change.csv" download>Download Template</a>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-2"><label>Update Location</label></div>
+              <div class="col-10">
+                <mat-form-field class="p-0 m-0" appearance="outline">
+                  <div>
+                    <mat-toolbar>
+                      <!-- Display files names -->
+                      <input matInput readonly formControlName="locationFile" name="name" />
+                      <!-- Browse Button -->
+                      <button mat-flat-button color="primary">Browse File</button>
+                    </mat-toolbar>
+                    <!-- Fetch selected filed on change -->
+                    <input type="file" #locationFileInput id="uploadFile8" class="uploadFile"
+                      (change)="uploadFileEvt($event, '8')" name="uploadFile" accept=".csv" />
+                  </div>
+                  <mat-error *ngIf="of['locationFile'].errors && of['locationFile'].errors['required']">any one file is required</mat-error>
+                </mat-form-field>
+                <a href="assets/Templates/transfer-list-change.csv" download>Download Template</a>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-2"><label>Comments:</label></div>
+              <div class="col-10">
+                <mat-form-field class="p-0 m-0" appearance="outline">
+                  <div>
+                    
+                    <!-- Fetch selected filed on change -->
+                    <input matInput placeholder="Enter Comments" formControlName="comment">
+                  </div>
+                </mat-form-field>
+                
+              </div>
+            </div>
+            <div class="button-wrapper">
+              <button mat-flat-button color="primary">Submit</button>
+              <button mat-flat-button color="warn" type="button" (click)="resetOldFileform()" style="margin-left: 10px;">Reset</button>
+              <button mat-flat-button color="accent" type="button" *ngIf="selectedTagName && selectedTagName!='-- SELECT --'" (click)="this.showTable = !this.showTable;showFileHistoryOnTabClick({index:0,tab:{}})" style="margin-left: 10px;">Show Data</button>
+            </div>
+          </form>
+
+          <mat-tab-group (selectedTabChange)="showFileHistoryOnTabClick($event)" class="mt-4" *ngIf="showTable">
+            <mat-tab label="Updated Grade"> 
+              <div class="row">
+                <div class="col-6">
+                  <select class="form-control form-control-sm" (change)="onReferenceChange($event, 0)" [(ngModel)]="gradeDefaultValue">
+                    <option value="">All</option>
+                    <option *ngFor="let gr of gradeReferences" [value]="gr">{{gr}}</option>
+                  </select>
+                </div>
+              </div>
+              <table mat-table [dataSource]="gradeDataSource" class="mat-table-container">
+                <ng-container matColumnDef="{{column}}" *ngFor="let column of gradeDefinedColumns">
+                  <th mat-header-cell *matHeaderCellDef> {{gradeColumnName[column]}} </th>
+                  <td mat-cell *matCellDef="let element" > <a *ngIf="column=='fileName'" [href]="context+'/files/'+element[column]">{{element[column]}}</a><div *ngIf="column!='fileName'">{{element[column]}}</div>  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="gradeColumnsToDisplay"></tr>
+                <tr mat-row *matRowDef="let row; columns: gradeColumnsToDisplay;"></tr>
+              </table>
+            </mat-tab>
+            <mat-tab label="Updated Location"> 
+              <div class="row">
+                <div class="col-6">
+                  <select class="form-control form-control-sm" (change)="onReferenceChange($event, 1)" [(ngModel)]="locationDefaultValue">
+                    <option value="">All</option>
+                    <option *ngFor="let gr of locationReferences" [value]="gr">{{gr}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <table mat-table [dataSource]="locationDataSource" class="mat-table-container mt-4">
+                <ng-container matColumnDef="{{column}}" *ngFor="let column of locationDefinedColumns">
+                  <th mat-header-cell *matHeaderCellDef> {{locationColumnName[column]}} </th>
+                  <td mat-cell *matCellDef="let element"> <a *ngIf="column=='fileName'" [href]="context+'/files/'+element[column]">{{element[column]}}</a><div *ngIf="column!='fileName'">{{element[column]}}</div> </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="locationColumnsToDisplay"></tr>
+                <tr mat-row *matRowDef="let row; columns: locationColumnsToDisplay;"></tr>
+              </table>  
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
+</div>

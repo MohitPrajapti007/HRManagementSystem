@@ -1,0 +1,951 @@
+
+<div class="col-md-12" >
+  <span class="form-control form-control-sm d-flex justify-content-end" style="width: auto; border: none;">
+    <b>Started at Time:</b> {{year1}}/{{month1}}/{{day1}} {{hours1}}:{{minutes1}}:{{seconds1}}
+  </span>
+</div>
+<div class="row" style="margin-bottom: 2px;">
+  <hr>
+  <div style="display: flex; justify-content: space-between; width: 100%; padding: 20px;">
+
+    <!-- Box 1 -->
+    <div style="width: 16%; border: 1px solid #ddd; padding: 10px;">
+      <i class="fas fa-users" style="margin-right: 5px;"></i> <!-- Add the icon you want for Total Employees -->
+      <b>Total Employees</b>
+      <p>{{totalEmployees}}</p>
+    </div>
+
+    <!-- Box 2 -->
+    <div style="width: 16%; border: 1px solid #ddd; padding: 10px;" (click)="setFilterValue('19')">
+      <i class="fas fa-filter" style="margin-right: 5px;"></i> <!-- Add the icon you want for Total Filtered -->
+      <b>Total Filtered</b>
+      <p>{{countAfterFilter}}</p>
+    </div>
+
+    <!-- Box 3 -->
+    <div style="width: 16%; border: 1px solid #ddd; padding: 10px;" (click)="getRules('19')">
+      <i class="fas fa-cogs" style="margin-right: 5px;"></i> <!-- Add the icon you want for After Rule -->
+      <b>After Rule</b>
+      <p>{{countAfterRule}}</p>
+    </div>
+
+    <!-- Box 4 -->
+    <div style="width: 16%; border: 1px solid #ddd; padding: 10px;">
+      <i class="fas fa-exchange-alt" style="margin-right: 5px;"></i> <!-- Add the icon you want for Total Transfer -->
+      <b>Total Transfer</b>
+      <p>{{totalTransfer}}</p>
+    </div>
+
+    <!-- Box 5 -->
+    <div style="width: 16%; border: 1px solid #ddd; padding: 10px;">
+      <i class="fas fa-arrow-down" style="margin-right: 5px;"></i> <!-- Add the icon you want for InBound Transfer Rows -->
+      <b>InBound Locations</b>
+      <p>{{inBoundCount}}</p>
+    </div>
+
+    <!-- Box 6 -->
+    <div style="width: 16%; border: 1px solid #ddd; padding: 10px;">
+      <i class="fas fa-arrow-up" style="margin-right: 5px;"></i> <!-- Add the icon you want for OutBound Transfer Rows -->
+      <b>OutBound Locations</b>
+      <p>{{outBoundCount}}</p>
+    </div>
+
+  </div>
+</div>
+<div class="row" style="padding: 10px;">
+    <div class="d-flex">
+      <div class="me-2" >Grade: 
+        <mat-button-toggle-group name="grade" aria-label="Grade" (change)="onToggleValChange($event, 'grade')"  [value]="selectedToggleGrade">
+          <mat-button-toggle value="All" >All</mat-button-toggle>
+          <mat-button-toggle value="Individual" >Individual</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="" >Discipline: 
+        <mat-button-toggle-group name="discipline" aria-label="Discipline" (change)="onToggleValChange($event, 'discipline')"  [value]="selectedToggleDiscipline">
+          <mat-button-toggle value="All" >All</mat-button-toggle>
+          <mat-button-toggle value="Individual" >Individual</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+
+    <!-- <p class="mat-button-toggle-label">Discipline: 
+      <mat-button-toggle-group name="grade" aria-label="Grade" (change)="onToggleValChangeDiscipline($event)"  [value]="selectedToggleDiscipline">
+        <mat-button-toggle value="All" >All</mat-button-toggle>
+        <mat-button-toggle value="Individual" >Individual</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p> -->
+    <div class="col-6" style="padding: 5px; height: 500px; ">
+    <section class="example-container mat-elevation-z8 " >
+      <div class="table-container" style="height: 500px;">
+        <div style="display: flex; align-items: center; padding: 10px;">
+          <b>Inbound/Outbound Report - Location</b>
+          <div role="button" style="margin-left: auto; cursor: pointer;" (click)="downloadExcelByTableId('table1', 'Analytics_table_1.xlsx')">
+            <i class="fas fa-file-export"></i>
+          </div>
+        </div>
+        <hr style="margin: 0;">
+      
+        <table mat-table [dataSource]="countLocationGradeAllData" matSort matSortActive="location" matSortDisableClear matSortDirection="desc" multiTemplateDataRows id="table1">
+
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef>
+              <span role="button" (click)="toggleInputFields('location')" mat-sort-header disableClear>Location</span>
+              <div *ngIf="inputFields['location']==1" class="select-all-container">
+                <mat-form-field class="p-0 m-0 custom-select" appearance="outline">
+                  <mat-select [(value)]="selectedLocation" multiple >
+                    <mat-checkbox [(ngModel)]="selectAllLocations" (change)="selectAllLocationsChanged()"><div style="font-size: 16px;align-items: center;">SELECT ALL</div></mat-checkbox>
+                    <mat-option *ngFor="let dept of locations" [value]="dept" (click)="onSearchData()">{{dept}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+            <td mat-footer-cell *matFooterCellDef> Total </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="grade">
+            <th mat-header-cell *matHeaderCellDef>
+              <span role="button" (click)="toggleInputFields('grade')" mat-sort-header disableClear >Grade</span>
+              <div *ngIf="inputFields['grade']==1" class="select-all-container">
+                <mat-form-field class="p-0 m-0 custom-select" appearance="outline" *ngIf="allFilter.grade === 'Individual'">
+                  <mat-select [(value)]="selectedGrades" multiple (ngModelChange)="onSearchData()" >
+                    <mat-checkbox [(ngModel)]="selectAllGrades" (change)="selectAllGradesChanged()">
+                      <div style="font-size: 16px; align-items: center;">SELECT ALL</div>
+                    </mat-checkbox>
+                    <mat-option *ngFor="let grade of grades" [value]="grade" (click)="onSearchData()">{{grade}}</mat-option>
+                  </mat-select>
+                  
+                </mat-form-field>
+              </div>
+            </th>
+            
+            <td mat-cell *matCellDef="let element">{{ element.grade }}</td>
+            
+            <td mat-footer-cell *matFooterCellDef> All </td>
+          </ng-container>
+          <ng-container matColumnDef="discipline">
+            <th mat-header-cell *matHeaderCellDef> 
+              <span role="button" (click)="toggleInputFields('discipline')" mat-sort-header disableClear>Discipline</span>
+              <div *ngIf="inputFields['discipline']" class="select-all-container">
+                <mat-form-field class="p-0 m-0 custom-select" appearance="outline" *ngIf="allFilter.discipline === 'Individual'"> 
+                  <mat-select [(value)]="selectedDisciplines" multiple >
+                    <mat-checkbox [(ngModel)]="selectAllDisciplines" (change)="selectAllDisciplinesChanged()"><div style="font-size: 16px;align-items: center;">SELECT ALL</div></mat-checkbox>
+                    <mat-option *ngFor="let dept of disciplines" [value]="dept" (click)="onSearchData()">{{dept}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.discipline }}</td>
+            <td mat-footer-cell *matFooterCellDef> All </td>
+          </ng-container>
+          <ng-container matColumnDef="inCount">
+            <th mat-header-cell *matHeaderCellDef> Inbound Count </th>
+            <td mat-cell *matCellDef="let element"> {{element.inCount}} </td>
+            <td mat-footer-cell *matFooterCellDef> {{tableTotal.inbound}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="outCount">
+            <th mat-header-cell *matHeaderCellDef> Outbound Count </th>
+            <td mat-cell *matCellDef="let element"> {{element.outCount}} </td>
+            <td mat-footer-cell *matFooterCellDef> {{tableTotal.outbound}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="netCount">
+            <th mat-header-cell *matHeaderCellDef> Net Change </th>
+            <td mat-cell *matCellDef="let element"> {{element.netCount}} </td>
+            <td mat-footer-cell *matFooterCellDef> {{tableTotal.netbound}} </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onTableRowClick(row)"  [class.highlighted-row]="row === selectedRow"></tr>
+          <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true" [hidden]="togglePressed"></tr>
+        </table>
+        <div class="sticky-row-info">
+          <ng-container>
+            <p>Total number of rows: {{ numberOfRowsAll }}</p>
+          </ng-container>
+        </div>
+        
+      </div>
+    </section>
+  </div>
+    <section class="example-container mat-elevation-z8 mb-2" [hidden]="selectedElement!='Chart'">
+      <div class="chart-container">
+        <canvas #chartArea></canvas>
+      </div>
+    </section>
+  
+  <div class="col-6" style="padding: 5px; height: 500px; overflow-y: auto; ">
+    <section class="example-container mat-elevation-z8" tabindex="0">
+      <div class="table-container" style="height: 500px;">
+        
+        <div style="display: flex; align-items: center; padding: 10px;">
+          <ng-container *ngIf="allFilter.grade === 'All'">
+            <b>Inbound/Outbound Report - Selected Location - {{ locationRowClick }}</b>
+          </ng-container>
+          <ng-container *ngIf="allFilter.grade == 'Individual'">
+            <b>Inbound/Outbound Report - Selected Location/Grade - {{ clickedRowDataDisplayName }}</b>
+          </ng-container>
+          <div role="button" style="margin-left: auto; cursor: pointer;" (click)="downloadExcelByTableId('table2', 'Analytics_table_2.xlsx')">
+              <i class="fas fa-file-export"></i>
+          </div>
+      </div>
+      <hr style="margin: 0;">
+        <table mat-table [dataSource]="clickedRowData" matSort matSortActive="id" matSortDisableClear matSortDirection="desc" multiTemplateDataRows id="table2">
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> Id </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+        
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+        
+          <!-- Grade Column -->
+          <ng-container matColumnDef="grade">
+            <th mat-header-cell *matHeaderCellDef> Grade </th>
+            <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="discipline">
+            <th mat-header-cell *matHeaderCellDef> Discipline </th>
+            <td mat-cell *matCellDef="let element"> {{element.discipline}} </td>
+          </ng-container>
+        
+          <!-- Present Location Column -->
+          <ng-container matColumnDef="presentLocation">
+            <th mat-header-cell *matHeaderCellDef> Present Location </th>
+            <td mat-cell *matCellDef="let element"> {{element.presentLocation}} </td>
+          </ng-container>
+        
+          <!-- Proposed Location Column -->
+          <ng-container matColumnDef="proposedLocation">
+            <th mat-header-cell *matHeaderCellDef> Proposed Location </th>
+            <td mat-cell *matCellDef="let element"> {{element.proposedLocation}} </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayColumnsNewTable; sticky: true"></tr>
+          
+          <!-- Rows for 'Individual' grade -->
+          <ng-container >
+            <tr mat-row *matRowDef="let row; columns: displayColumnsNewTable;" (click)="onTableRowClickDetail(row)"
+              [ngClass]="{'red-row': row.presentLocation === locationRowClick, 'green-row': row.presentLocation !== locationRowClick}" [class.highlighted-row]="row === selectedRow">
+            </tr>
+          </ng-container>
+      
+          
+        </table>
+        <div class="sticky-row-info">
+          <div class="row">
+            <div class="col-6">
+          <p>Total number of rows: {{ numberofRowsT2 }}</p>
+        </div>
+        <div class="col-6" style="margin-left: auto;">
+          Outbound Rows:<span class="dot red"></span>
+          Inbound Rows:<span class="dot green"></span>
+        </div>
+        
+        </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<div id="divToCapture" class="row example-container mat-elevation-z8 mb-2" style="margin-left: 1px;margin-right: 1px;margin-top: 2px;">
+  <div style="display: flex; align-items: center; padding: 10px;">
+    <b>Employee Details:</b>
+    <div role="button" style="margin-left: auto; cursor: pointer;" (click)="generatePDF()">
+      <mat-icon>download</mat-icon>
+    </div>
+  </div>
+  <hr style="margin: 0;">
+  <div class="col-6">
+  <table *ngIf="clickedRowDetail" style="margin-left: 20px;">
+    <tr>
+      <th>Name:</th>
+      <td>{{clickedRowDetail.name}}</td>
+    </tr>
+    <tr>
+      <th>Designation</th>
+      <td>{{clickedRowDetail.designation}}</td>
+    </tr>
+    <tr>
+      <th>Department</th>
+      <td>{{clickedRowDetail.department}}</td>
+    </tr>
+    <tr>
+      <th>Grade</th>
+      <td>{{clickedRowDetail.grade}}</td>
+    </tr>
+    <tr>
+      <th>Discipline</th>
+      <td>{{clickedRowDetail.discipline}}</td>
+    </tr>
+    
+    
+    <tr>
+      <th>Age:</th>
+      <td>{{clickedRowDetail.age}}</td>
+    </tr>
+    
+    <tr>
+      <th>Employee Status</th>
+      <td>{{clickedRowDetail.empStatus}}</td>
+    </tr>
+    <tr>
+      <th>
+        Placement History
+      </th>
+      <td>{{clickedRowDetail.placementHistoryYears}}</td>
+    </tr>
+    <tr>
+      <th>Present Location</th>
+      <td>{{clickedRowDetail.presentLocation}}</td>
+    </tr>
+    <tr>
+      <th>Proposed Location:</th>
+      <td>{{clickedRowDetail.proposedOptionLocation01}}</td>
+    </tr>
+    
+    
+  </table>
+  </div>
+  <div class="col-6">
+    <div id="productChart" style="width: 100%; height: 330px;margin-top: -10px;"></div>
+  </div>
+  
+  
+</div>
+
+
+<div  style="margin-left:1px ;margin-right: 1px;margin-bottom: 10px;">
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="display: flex; align-items: center; padding: 10px;">
+      <b>Transfer Process List</b>
+      <button mat-raised-button  (click)="toggleAllTable()" style="margin-left: 10px;">Show/Hide</button>
+      <input type="text" [(ngModel)]="searchedName" placeholder="Search by Name" style="margin-left: 10px;">
+
+      <input type="text" [(ngModel)]="searchedId" placeholder="Search by Id(CPF)" style="margin-left: 10px;width:130px">
+<!-- Search button to trigger applyFilter -->
+    <button (click)="applyFilter()">Search</button>
+      
+    
+      <!-- Move the mat-form-field and filter button to the right -->
+      <div style="margin-left: auto; display: flex; align-items: center;">
+        <mat-form-field class="custom-mat-form-field">
+          <mat-label>Select an option</mat-label>
+          <mat-select [(ngModel)]="selectedOption" >
+            <mat-option (click)="showAllDataTable()" *ngFor="let option of options" [value]="option.value">{{ option.label }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+ 
+        
+        
+        <div role="button" style="cursor: pointer; margin-left: 10px;" (click)="downloadExcel()">
+          <i class="fas fa-file-export"></i>
+        </div>
+      </div>
+    </div>
+    
+    <hr style="margin: 0;"/>
+    <div *ngIf="showAllTable" class="table-container">
+      <!-- Position Column -->
+      <table mat-table [dataSource]="dataSourceAll" >
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="id" [sticky]="true">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let myitem" > {{myitem.id}} </td>
+        </ng-container>
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name"  [sticky]="true">
+          <th mat-header-cell *matHeaderCellDef> Name</th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.name}} </td>
+        </ng-container>
+    
+        <!-- Weight Column -->
+        <ng-container matColumnDef="designation">
+          <th mat-header-cell *matHeaderCellDef> Designation </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.designation}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="directorate">
+          <th mat-header-cell *matHeaderCellDef> Directorate </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.directorate}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="department">
+          <th mat-header-cell *matHeaderCellDef> Department </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.department}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="grade">
+          <th mat-header-cell *matHeaderCellDef> Grade </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.grade}} </td>
+        </ng-container>
+        
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="noOfYears">
+          <th mat-header-cell *matHeaderCellDef> No. of Years </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.noOfYears}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="discipline">
+          <th mat-header-cell *matHeaderCellDef> Discipline </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.discipline}} </td>
+        </ng-container>
+        
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="mobilityConstraint">
+          <th mat-header-cell *matHeaderCellDef> Mobility Constraint </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.mobilityConstraint}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="presentLocation">
+          <th mat-header-cell *matHeaderCellDef> Present Location </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.presentLocation}} </td>
+        </ng-container>
+        
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="previousHL">
+          <th mat-header-cell *matHeaderCellDef> Previous HL </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.previousHL}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="birthDate">
+          <th mat-header-cell *matHeaderCellDef> Date of Birth </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.birthDate}} </td>
+        </ng-container>
+  
+        <!-- Age Column -->
+        <ng-container matColumnDef="age">
+          <th mat-header-cell *matHeaderCellDef> Age </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.age}} </td>
+        </ng-container>
+  
+        <!-- PeoposedLocation Column -->
+        <ng-container matColumnDef="proposedLocation">
+          <th mat-header-cell *matHeaderCellDef> ProposedLocation </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.proposedLocation}} </td>
+        </ng-container>
+        <!-- PeoposedLocation Column -->
+        <ng-container matColumnDef="changeOfLocation">
+          <th mat-header-cell *matHeaderCellDef> ChangeOfLocation </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.changeOfLocation}} </td>
+        </ng-container>
+        
+        <!-- newDirectorate Column -->
+        <ng-container matColumnDef="newDirectorate">
+          <th mat-header-cell *matHeaderCellDef> New Directorate </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.newDirectorate}} </td>
+        </ng-container>
+        <!-- newDunction Column -->
+        <ng-container matColumnDef="newFunction">
+          <th mat-header-cell *matHeaderCellDef> New Function </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.newFunction}} </td>
+        </ng-container>
+        <!-- rks Column -->
+        <ng-container matColumnDef="rks">
+          <th mat-header-cell *matHeaderCellDef> Rks </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.rks}} </td>
+        </ng-container>
+        <!-- rks Column -->
+        <ng-container matColumnDef="dueForDPC2023">
+          <th mat-header-cell *matHeaderCellDef> DueForDPC </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.dueForDPC2023}} </td>
+        </ng-container>
+        <!-- deputation Column -->
+        <ng-container matColumnDef="deputation">
+          <th mat-header-cell *matHeaderCellDef> Deputation </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.deputation}} </td>
+        </ng-container>
+        <!-- secondment Column -->
+        <ng-container matColumnDef="secondment">
+          <th mat-header-cell *matHeaderCellDef> Secondment </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.secondment}} </td>
+        </ng-container>
+        <!-- sensitivePosition Column -->
+        <ng-container matColumnDef="sensitivePosition">
+          <th mat-header-cell *matHeaderCellDef> SensitivePosition </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.sensitivePosition}} </td>
+        </ng-container>
+        <!-- fieldPostingTransferPromoted Column -->
+        <ng-container matColumnDef="fieldPostingTransferPromoted">
+          <th mat-header-cell *matHeaderCellDef> Field Posting Transfer Promoted </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.fieldPostingTransferPromoted}} </td>
+        </ng-container>
+        <!-- superannuatingby2025 Column -->
+        <ng-container matColumnDef="superannuatingby2025">
+          <th mat-header-cell *matHeaderCellDef> Superannuating </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.superannuatingby2025}} </td>
+        </ng-container>
+        <!-- quarterlySupby2025 Column -->
+        <ng-container matColumnDef="quarterlySupby2025">
+          <th mat-header-cell *matHeaderCellDef> Quarterly Sup </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.quarterlySupby2025}} </td>
+        </ng-container>
+  
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="empStatus">
+          <th mat-header-cell *matHeaderCellDef> Employee Status </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.empStatus}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="employeeGroup">
+          <th mat-header-cell *matHeaderCellDef> Employee Group </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.employeeGroup}} </td>
+        </ng-container>
+        
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef> Gender </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.gender}} </td>
+        </ng-container>
+    
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="wilTo4HL">
+          <th mat-header-cell *matHeaderCellDef> Wil to HL </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.wilTo4HL}} </td>
+        </ng-container>
+        
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="willingnessChoice">
+          <th mat-header-cell *matHeaderCellDef> Willingness Choice </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.willingnessChoice}} </td>
+        </ng-container>
+        
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="tagName">
+          <th mat-header-cell *matHeaderCellDef> Tag Name </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.tagName}} </td>
+        </ng-container>
+        <!-- oldTPCGroundstillexist Column -->
+        <ng-container matColumnDef="oldTPCGroundstillexist">
+          <th mat-header-cell *matHeaderCellDef> Old TPC Ground Still Exist </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.oldTPCGroundstillexist}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="tpcPool2022">
+          <th mat-header-cell *matHeaderCellDef> TPC Pool </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.tpcPool2022}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="tpc">
+          <th mat-header-cell *matHeaderCellDef> TPC </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.tpc}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="hlChoice1">
+          <th mat-header-cell *matHeaderCellDef> HlChoice1 </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.hlChoice1}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="hlChoice2">
+          <th mat-header-cell *matHeaderCellDef> HlChoice2 </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.hlChoice2}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="hlChoice3">
+          <th mat-header-cell *matHeaderCellDef> HlChoice3 </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.hlChoice3}} </td>
+        </ng-container>
+        <ng-container matColumnDef="prsntGradeDt">
+          <th mat-header-cell *matHeaderCellDef> PrsntGrade Dt </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.prsntGradeDt}} </td>
+        </ng-container>
+        <ng-container matColumnDef="handicap">
+          <th mat-header-cell *matHeaderCellDef> Handicap </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.handicap}} </td>
+        </ng-container>
+        <ng-container matColumnDef="supernDt">
+          <th mat-header-cell *matHeaderCellDef> Supern Dt </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.supernDt}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="compulsoryTransferFlag">
+          <th mat-header-cell *matHeaderCellDef> Compulsory Transfer </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.compulsoryTransferFlag}} </td>
+        </ng-container>
+        <ng-container matColumnDef="compulsoryTransferLocation">
+          <th mat-header-cell *matHeaderCellDef> CT Location </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.compulsoryTransferLocation}} </td>
+        </ng-container>
+        <ng-container matColumnDef="compulsoryTransferComments">
+          <th mat-header-cell *matHeaderCellDef> CT Comments </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.compulsoryTransferComments}} </td>
+        </ng-container>
+        <ng-container matColumnDef="mobilityConstraintsFlag">
+          <th mat-header-cell *matHeaderCellDef> Mobility Constraints </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.mobilityConstraintsFlag}} </td>
+        </ng-container>
+        <ng-container matColumnDef="mobilityConstraintsDetail">
+          <th mat-header-cell *matHeaderCellDef> MC Detail </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.mobilityConstraintsDetail}} </td>
+        </ng-container>
+        <ng-container matColumnDef="mobilityConstraintsComments">
+          <th mat-header-cell *matHeaderCellDef> Mobility Constant Comments </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.mobilityConstraintsComments}} </td>
+        </ng-container>
+  
+        
+        <ng-container matColumnDef="eligible">
+          <th mat-header-cell *matHeaderCellDef> Eligible </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.eligible}} </td>
+        </ng-container>
+        <ng-container matColumnDef="proposedOptionId01">
+          <th mat-header-cell *matHeaderCellDef> Proposed </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.proposedOptionId01}} -  {{myitem.proposedOptionName01}} - {{myitem.proposedOptionLocation01}} </td>
+        </ng-container>
+        <ng-container matColumnDef="transfer_comment">
+          <th mat-header-cell *matHeaderCellDef> Transfer comment </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.transferComment}} </td>
+        </ng-container>
+        <ng-container matColumnDef="optionAllR">
+          <th mat-header-cell *matHeaderCellDef> Option All R </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.optionAllR}} </td>
+        </ng-container>
+        <ng-container matColumnDef="optionId01">
+          <th mat-header-cell *matHeaderCellDef> Option01 </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.optionId01}} -  {{myitem.optionName01}} - {{myitem.optionLocation01}} </td>
+        </ng-container>
+        <ng-container matColumnDef="optionId02">
+          <th mat-header-cell *matHeaderCellDef> Option02 </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.optionId02}} -  {{myitem.optionName02}} - {{myitem.optionLocation02}} </td>
+        </ng-container>
+        <ng-container matColumnDef="optionId03">
+          <th mat-header-cell *matHeaderCellDef> Option03 </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.optionId03}} -  {{myitem.optionName03}} - {{myitem.optionLocation03}} </td>
+        </ng-container>
+        <ng-container matColumnDef="actionFlag">
+          <th mat-header-cell *matHeaderCellDef> actionFlag </th>
+          <td mat-cell *matCellDef="let myitem" [title]="myitem.actionSpecificLocationValue">
+            {{ myitem.actionValue }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="placementHistoryYears">
+          <th mat-header-cell *matHeaderCellDef> Placement History(Yrs) </th>
+          <td mat-cell *matCellDef="let myitem"> {{myitem.placementHistoryYears}} </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayColumnsAllTable; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumnsAllTable;" [ngClass]="{'highlighted': (row.highlighted), 'green-row': row.proposedLocation !== null}" (click)="row.highlighted= !row.highlighted"></tr>
+      </table>
+    </div>
+    <mat-paginator [length]="totalElements" [pageIndex]="pageNo" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+            (page)="onPageChange($event)"
+            showFirstLastButtons
+            aria-label="Select page of periodic elements">
+      </mat-paginator>
+    </section>
+</div>
+<section class="example-container mat-elevation-z8" tabindex="0" style="margin-left: 1px;margin-right: 1px;margin-bottom: 20px;">
+  
+  <div style="display: flex; align-items: center; padding: 10px;">
+    <b>Std Manning List:</b>
+    <button mat-raised-button  (click)="toggleStdTable()" style="margin-left: 10px;">Show/Hide</button>
+  </div>
+  <hr style="margin: 0;"/>
+  <div *ngIf="showStdTable" class="table-container">
+    <table mat-table [dataSource]="manningData ">
+      
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+      <ng-container matColumnDef="directorate">
+        <th mat-header-cell *matHeaderCellDef> Directorate </th>
+        <td mat-cell *matCellDef="let element"> {{element.directorate}} </td>
+      </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef> Location </th>
+        <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+      </ng-container>
+      <ng-container matColumnDef="discipline">
+        <th mat-header-cell *matHeaderCellDef> Discipline </th>
+        <td mat-cell *matCellDef="let element"> {{element.discipline}} </td>
+      </ng-container>
+      
+      <!-- 
+      <ng-container matColumnDef="department">
+        <th mat-header-cell *matHeaderCellDef> Department </th>
+        <td mat-cell *matCellDef="let element"> {{element.department}} </td>
+      </ng-container>
+      <ng-container matColumnDef="functions">
+        <th mat-header-cell *matHeaderCellDef> Functions </th>
+        <td mat-cell *matCellDef="let element"> {{element.functions}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sub_functions">
+        <th mat-header-cell *matHeaderCellDef> Sub Functions </th>
+        <td mat-cell *matCellDef="let element"> {{element.sub_functions}} </td>
+      </ng-container>
+    -->
+      <ng-container matColumnDef="grade_E9">
+        <th mat-header-cell *matHeaderCellDef> Required Grade E9 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_E9}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_E9">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade E9 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_E9}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_E9">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade E9 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_E9}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="grade_E8">
+        <th mat-header-cell *matHeaderCellDef> Required Grade E8 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_E8}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_E8">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade E8 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_E8}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_E8">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade E8 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_E8}} </td>
+      </ng-container>
+      
+
+      <ng-container matColumnDef="grade_E7">
+        <th mat-header-cell *matHeaderCellDef> Required Grade E7 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_E7}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_E7">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade E7 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_E7}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_E7">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade E7 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_E7}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="grade_E6">
+        <th mat-header-cell *matHeaderCellDef> Required Grade E6 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_E6}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_E6">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade E6 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_E6}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_E6">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade E6 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_E6}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="grade_E54">
+        <th mat-header-cell *matHeaderCellDef> Required Grade E5-E4 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_E54}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_E54">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade E5-E4 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_E54}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_E54">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade E5-E4 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_E54}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="grade_E32">
+        <th mat-header-cell *matHeaderCellDef> Required Grade E3-E2 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_E32}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_E32">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade E3-E2 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_E32}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_E32">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade E3-E2 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_E32}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="grade_E1S5">
+        <th mat-header-cell *matHeaderCellDef> Required Grade E1-S5 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_E1S5}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_E1S5">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade E1-S5 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_E1S5}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_E1S5">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade E1-S5 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_E1S5}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="grade_S40">
+        <th mat-header-cell *matHeaderCellDef> Required Grade S4-S0 </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade_S40}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalGrade_S40">
+        <th mat-header-cell *matHeaderCellDef> Critical Grade S4-S0 </th>
+        <td mat-cell *matCellDef="let element"> {{element.criticalGrade_S40}} </td>
+      </ng-container>
+      <ng-container matColumnDef="existingGrade_S40">
+        <th mat-header-cell *matHeaderCellDef>Existing Grade S4-S0 </th>
+        <td mat-cell *matCellDef="let element"> {{element.existingGrade_S40}} </td>
+      </ng-container>
+      <!--
+      <ng-container matColumnDef="existing">
+        <th mat-header-cell *matHeaderCellDef> Existing </th>
+        <td mat-cell *matCellDef="let element"> {{element.existing}} </td>
+      </ng-container>
+    -->
+      
+      
+      <ng-container matColumnDef="created_on">
+        <th mat-header-cell *matHeaderCellDef> Created On </th>
+        <td mat-cell *matCellDef="let element"> {{element.created_on}} </td>
+      </ng-container>
+      
+      <!-- Name Column -->
+      <ng-container matColumnDef="updated_on">
+        <th mat-header-cell *matHeaderCellDef> Updated On </th>
+        <td mat-cell *matCellDef="let element"> {{element.updated_on}} </td>
+      </ng-container>
+      
+      <!--
+      <ng-container matColumnDef="Surplus_Deficit">
+        <th mat-header-cell *matHeaderCellDef> Surplus /Deficit </th>
+        <td mat-cell *matCellDef="let element"> {{element.total-element.existing}} </td>
+      </ng-container>
+      <ng-container matColumnDef="remarks">
+        <th mat-header-cell *matHeaderCellDef> Remarks </th>
+        <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+      </ng-container>
+      <ng-container matColumnDef="network">
+        <th mat-header-cell *matHeaderCellDef> Network </th>
+        <td mat-cell *matCellDef="let element"> {{element.network}} </td>
+      </ng-container> 
+      <ng-container matColumnDef="ed_region">
+        <th mat-header-cell *matHeaderCellDef> ED Region </th>
+        <td mat-cell *matCellDef="let element"> {{element.ed_region}} </td>
+      </ng-container>
+      -->
+      
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="manningDisplayColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: manningDisplayColumns;"></tr>
+    </table>
+  </div>
+</section>
+
+<section class="example-container mat-elevation-z8" tabindex="0" style="margin-left: 1px;margin-right: 1px;margin-bottom: 20px;">
+  
+  <div style="display: flex; align-items: center; padding: 10px;">
+    <b>Std Manning Report:</b>
+    <button mat-raised-button  (click)="toggleStdReportTable()" style="margin-left: 10px;">Show/Hide</button>
+  </div>
+  <hr style="margin: 0;"/>
+  <div *ngIf="showStdReportTable" class="table-container">
+    <table mat-table [dataSource]="manningReportData ">
+      
+      
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef> Location </th>
+        <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="discipline">
+        <th mat-header-cell *matHeaderCellDef> Discipline </th>
+        <td mat-cell *matCellDef="let element"> {{element.discipline}} </td>
+      </ng-container>
+
+      <!-- Grade Column -->
+      <ng-container matColumnDef="grade">
+        <th mat-header-cell *matHeaderCellDef> Grade </th>
+        <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
+      </ng-container>
+
+      <!-- In Count Column -->
+      <ng-container matColumnDef="in_count">
+        <th mat-header-cell *matHeaderCellDef> In Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.inCount}} </td>
+      </ng-container>
+
+      <!-- Net Count Column -->
+      <ng-container matColumnDef="net_count">
+        <th mat-header-cell *matHeaderCellDef> Net Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.netCount}} </td>
+      </ng-container>
+
+      <!-- Out Count Column -->
+      <ng-container matColumnDef="out_count">
+        <th mat-header-cell *matHeaderCellDef> Out Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.outCount}} </td>
+      </ng-container>
+
+      <!-- Header and Row Definitions -->
+      <tr mat-header-row *matHeaderRowDef="manningReportDisplayColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: manningReportDisplayColumns;"></tr>
+
+    </table>
+  </div>
+</section>
+
+
+<div style="height: 10px;"></div>
+<div class="example-container mat-elevation-z8" style="margin-top: 10px;margin-bottom: 10px;">
+  <div style="display: flex; align-items: center; padding: 10px;"><b>Upload files details</b></div>
+  <hr>
+  <table class="table table-responsive" id="table4">
+    <thead>
+      <tr>
+        <th>Tag Name</th>
+        <td>{{tagName}}</td>
+      </tr>
+        <tr>  
+        <th>Master data File</th>
+        <td>{{masterdataFile}}</td>
+      </tr>
+        <tr>
+        <th>Hard Location File</th>
+        <td>{{hardLocationFile}}</td>
+      </tr>
+        <tr>
+        <th>Mobility Constraints File</th>
+        <td>{{mobilityConstraintsFile}}</td>
+      </tr>
+      <tr>
+        <th>Sensitive Position File</th>
+        <td>{{sensitivePositionFile}}</td>
+      </tr>
+        <tr>
+        <th>Std Manning File</th>
+        <td>{{stdManningFile}}</td>
+      </tr>
+        <tr>
+        <th>Compulsary Transfer File</th>
+        <td>{{compulsaryTransferFile}}</td>
+      </tr>
+      <tr>
+        <th>Uploaded date</th>
+        <td>{{year}}/{{month}}/{{day}}</td>
+      </tr>
+      <tr>
+        <th>Uploaded time</th>
+        <td>{{hours}}:{{minutes}}:{{seconds}}</td>
+      </tr>
+
+
+    </thead>
+    
+  </table>
+</div>

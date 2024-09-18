@@ -1,0 +1,20 @@
+.table-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Optional: Align tables to the top of the container */
+  }
+  
+  .example-container {
+   /* Optional: Add margin between tables */
+      width: 30%; /* Set the width of each section to 30% */
+      margin: 22px;
+      box-sizing: border-box;
+  }
+  /* CSS */
+.table-container {
+  max-height: 490px; /* Set the maximum height for the table */
+  overflow-y: auto; /* Enable vertical scrollbar when the content exceeds the container height */
+}
+.search-container{
+  padding: 10px;
+}

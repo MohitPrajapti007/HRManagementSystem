@@ -1,0 +1,48 @@
+
+.mat-toolbar{
+    background-color: rgb(130, 168, 238);
+    color: white;
+    box-shadow: 0 5px 5px 0px #090b6f85;
+  }
+  .mat-button{
+     color: white;
+  }
+  .spacer{
+    flex: 1 1 auto;
+  }
+  .mat-toolbar-row{
+    height:50px;
+  }
+  .loader-container {
+    top: 50%; left: 50%; position: absolute; z-index: 1062;
+  }
+  .overlay {
+    background-color:#EFEFEF;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    top: 0px;
+    left: 0px;
+    opacity: .5; /* in FireFox */ 
+    filter: alpha(opacity=50); /* in IE */
+}
+.myselect{
+  font-size: 18px;
+  font-weight: normal;
+  color: #3e3a3a;
+  min-height: 0!important;
+  line-height: 1!important;
+}
+.mat-button-toggle-group {
+  height: 28px;
+  align-items: center;
+}
+a.active-link {
+  border-bottom: 2px solid white;
+}
+a:hover {
+  border-bottom: 2px solid rgb(235, 209, 209);
+}
+.active {
+  background-color: #69ea7c;
+}

@@ -1,0 +1,49 @@
+.dialog-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    border-top: 4px solid #1904E5;
+    background-color: rgb(130, 168, 238);
+    color: white;
+    box-shadow: 0 5px 5px 0px #090b6f85;
+    font-size: 18px;
+}
+.close-button{
+  float: right;
+  top:2px;
+  right:-24px;
+}
+
+.close-icon {
+  transition: 1s ease-in-out;
+}
+
+.close-icon:hover {
+  transform: rotate(180deg);
+}
+.mdc-dialog__title::before {
+  content: none!important;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px; /* Adjust the margin-top value based on your design */
+}
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+.error-message {
+  margin: auto;
+  text-align: center;
+  color: red;
+  background-color: rgb(239, 153, 153);
+  margin-bottom: 10px;
+}
+select option:disabled {
+  background-color: lightgray;
+}

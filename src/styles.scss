@@ -1,0 +1,79 @@
+
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import 'node_modules/material-icons/iconfont/material-icons.scss';
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0px;
+}
+.body-background {
+    background-image: linear-gradient(135deg, #fdfe00 10%, #1904E5 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: "Open Sans", sans-serif;
+    color: #333333;
+  }
+.font-icon-btn {
+    padding: 0.1em 0.3em 0.1em!important;
+}
+
+.sidebar {
+    /*
+    background: url(https://www.codingnepalweb.com/demos/create-glassmorphism-sidebar-html-css/images/hero-bg.jpg)!important;
+    background-position-y: center!important;
+    
+*/
+    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%)!important;
+}
+ /*
+   background-image: linear-gradient(43deg, #4159d0 0%, #C850C0 46%, #ffcd70 100%)!important;
+  background-size: 150% 150%!important;
+  animation: gradient 5s ease infinite!important;
+  box-shadow: 10px 10px 30px #1919190d, -10px -10px 30px #05050524!important;
+    
+.sidebar:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    transition: all .2s linear;
+}*/
+
+.form-control.is-invalid, .was-validated .form-control:invalid {
+    border-left-width: 4px;
+}
+
+.text-transparent {
+    opacity: 0;
+}
+
+.custom-select .mat-mdc-form-field-infix {
+    max-height: 30px!important;
+    min-height: 30px!important;
+  }
+.custom-select .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 4px!important;
+    padding-bottom: 4px!important;
+}
+.custom-select .mat-mdc-select {
+  font-size: 12px!important;
+}
+.highlighted-row {
+    background-color: rgb(226, 226, 218); 
+}
+.highlighted-row td{
+    background-color: rgb(226, 226, 218); 
+}
+@media (min-width: 768px) {
+    .w-md-100 {
+       width:100% !important;
+    }
+  }
+  .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    max-width: none!important;
+}

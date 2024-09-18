@@ -1,0 +1,110 @@
+
+  .dashboard-card-content {
+    text-align: center;
+  }
+  .mat-button-toggle-group {
+    height: 28px;
+    align-items: center;
+  }
+
+  .mat-mdc-table {
+    width: 100%;
+    max-height: 500px;
+    overflow: auto;
+  }
+
+.mat-button-toggle-group[name="gender"] .mat-button-toggle-checked {
+  background-color: #69ea7c;
+  color: white;
+}
+
+.mat-button-toggle-group[name="employeestatus"] .mat-button-toggle-checked {
+  background-color: #69ea7c;
+  color: white;
+}
+
+.mat-button-toggle-group[name="mobilityconstraints"] .mat-button-toggle-checked {
+  background-color: #69ea7c;
+  color: white;
+}
+
+.mat-button-toggle-group[name="sensitivePosition"] .mat-button-toggle-checked {
+  background-color: #82ee92;
+  color: white; 
+}
+
+.mat-button-toggle-label{
+  display: inline;
+  padding-left: 10px;
+}
+
+.info-box{
+  border: 1px solid #dfdbdb;
+  padding: 10px;
+  text-align: center;
+}
+.table-container {
+  max-height: 416px;
+  overflow-y: auto;
+}
+.chart-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+.treemap .apexcharts-datalabel {
+  font-size: 14px !important;
+}
+.td-sq {
+  width: 20px;
+  background-color: blueviolet;
+  padding: 12px;
+}
+.fs-12 {
+  font-size: 12px;
+}
+.c-bg-success td{
+  background-color: #69ea7c;
+}
+
+.progress-bar{
+  background-color: #dbf2d0;
+  padding: 1px !important;
+  width: 100px;
+  float: right;
+}
+
+.progress-bar .bar{
+  background: #2eae2e !important;
+}
+.upper-table-container {
+  padding: 5px; height: 300px;
+}
+.overflow-auto.upper-table-container td:first-child {
+  width: 60%;
+}
+.square-border-button {
+  width: 10px !important; /* Adjust the width to your desired size */
+  height: 30px; /* Adjust the height to your desired size */
+  border: 1px solid #E1E5E8; /* Set the border color and width */
+  border-radius: 0; /* Remove border-radius to make it square */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -5px;
+}
+.custom-input {
+  width: 5px !important; /* Set your desired width */
+}
+div.row.px-2 {
+  padding-right: 12px !important;
+  padding-left: 12px !important;
+}
+
+div.col-4.info-box {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 1px;
+  padding-right: 1px;
+  max-width: 100%; 
+}
+
