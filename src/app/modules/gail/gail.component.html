@@ -1,0 +1,83 @@
+
+   <div >
+    <mat-toolbar color="primary">
+        <mat-toolbar-row style="background-color: #1904E5;">
+                
+                <img src="assets/hrms.png" style="height: 40px; margin-right: 10px;">
+            <span>HRMS</span>
+            <div class="spacer"></div>
+            <a mat-button [routerLink]="'/gail/home'" routerLinkActive="active-link" (click)="showTab('home')">
+               <mat-icon aria-hidden="false" aria-label="home icon">dashboard</mat-icon>
+               Dashboard
+             </a>             
+            <a mat-button [routerLink]="'/gail/uploads'" routerLinkActive="active-link" (click)="showTab('upload')">
+               <mat-icon aria-hidden="false" aria-label="upload icon" fontIcon="cloud_upload"></mat-icon>
+               Upload</a>
+            <a mat-button [routerLink]="'/gail/report'" routerLinkActive="active-link" (click)="showTab('report')">
+               <mat-icon aria-hidden="false" aria-label="report icon" fontIcon="stream"></mat-icon>
+               Output Data</a>
+            <a mat-button [routerLink]="'/gail/analytics'" routerLinkActive="active-link" (click)="showTab('analytics')">
+               <mat-icon aria-hidden="false" aria-label="analytics icon">insert_chart</mat-icon> Analytics
+               </a>
+            <a mat-button [routerLink]="'/gail/metadata'" routerLinkActive="active-link" (click)="showTab('metadata')">
+                  <mat-icon aria-hidden="false" aria-label="setting icon" fontIcon="data_exploration"></mat-icon>
+                  System Data</a>
+            <a mat-button [routerLink]="'/gail/settings'" routerLinkActive="active-link" (click)="showTab('setting')">
+               <mat-icon aria-hidden="false" aria-label="setting icon" fontIcon="settings"></mat-icon>
+               Settings</a>
+            <a mat-button (click)="logout()">
+               <mat-icon aria-hidden="false" aria-label="logout icon" fontIcon="exit_to_app"></mat-icon>
+               Logout</a>
+        </mat-toolbar-row>
+    
+        
+        <mat-toolbar-row *ngIf="activeTab=='home' || activeTab=='report' || activeTab=='analytics'" color="accent">
+         <div class="d-flex w-100">
+            <div *ngIf="activeTab=='home'||activeTab=='report'">{{activeTab=='home'?'Dashboard':'Recommend'}} &nbsp; | &nbsp; 
+               <img *ngIf="selectedTag && selectedTag!='-- SELECT --'" [src]="'assets/icons/layers.png'" width="30px" (click)="setFilterValue()" class="me-2" [title]="'set filter'"/>  
+               <img *ngIf="selectedTag && selectedTag!='-- SELECT --'" [src]="'assets/icons/star.png'" width="30px" (click)="setAllRuleValue()" class="me-2" [title]="'set rules'"/>   
+               <img *ngIf="activeTab=='report' && selectedTag && selectedTag!='-- SELECT --'" [src]="'assets/icons/check-yellow.png'" width="30px" (click)="setActionValue()" class="me-2" [title]="'set Specific Input'"/>   
+               <img *ngIf="activeTab=='home' && selectedTag && selectedTag!='-- SELECT --'" [src]="'assets/icons/check-yellow.png'" width="30px" (click)="navigateToReportPage()" class="me-2" [title]="'set Specific Input'"/>   
+               <img *ngIf="activeTab=='report' && selectedTag && selectedTag!='-- SELECT --'" [src]="'assets/icons/clean.png'" width="30px" (click)="resetChanges()" class="me-2" [title]="'Reset Proposed list'"/>  
+               <button *ngIf="selectedTag && selectedTag!='-- SELECT --' && activeTab=='report'" style="height: 30px;" mat-flat-button color="accent" class="me-2"  (click)="onClickRecommend()">Execute</button> 
+               |
+               <mat-button-toggle-group *ngIf="selectedTag && selectedTag!='-- SELECT --'" name="filterToggle" aria-label="Filter Toggle" [value]="varToggle" class="me-2" style="font-size: 14px; margin-left: 10px;" (change)="onToggleGroupChange($event)">
+                  <mat-button-toggle value="0" (change)="onToggleValChange($event, 'All')" [checked]="varToggle=='All'">All</mat-button-toggle>
+                  <mat-button-toggle value="1" (change)="onToggleValChange($event, 'Filtered')" [checked]="varToggle=='Filtered'">Filtered</mat-button-toggle>
+                  <mat-button-toggle value="2" (change)="onToggleValChange($event, 'Eligible')" >Eligible</mat-button-toggle>
+                  <mat-button-toggle value="3" (change)="onToggleValChange($event, 'Actions')">SI List</mat-button-toggle>
+                  <mat-button-toggle value="4" (change)="onToggleValChange($event, 'Recommend')">Proposed</mat-button-toggle>
+               </mat-button-toggle-group>
+            </div>
+
+            <div *ngIf="activeTab=='analytics'">Analytics |</div>
+            <div class="spacer"></div>
+            <div *ngIf="(selectedTag && selectedTag!='-- SELECT --') && (activeTab=='home' || activeTab=='analytics' || activeTab=='report') && tpStatus!='Completed'" class="me-2 d-flex align-items-center" style="font-size: 16px;">Transfer Process: {{ tpStatus }}&nbsp;{{ tpStatusDot }}&nbsp;<mat-icon role="button" (click)="tpStateChange(selectedTag, true)" aria-hidden="false" aria-label="refresh icon" fontIcon="refresh" style="color:white" title="click "></mat-icon></div>
+            <div *ngIf="(selectedTag && selectedTag!='-- SELECT --') && (activeTab=='home' || activeTab=='analytics' || activeTab=='report') && tpStatus=='Completed'" class="me-2 d-flex align-items-center" style="font-size: 16px;">Last Transfer Process Completed&nbsp;<mat-icon role="button" (click)="tpStateChange(selectedTag, true)" aria-hidden="false" aria-label="refresh icon" fontIcon="refresh" style="color:white" title="click "></mat-icon></div>
+            <div>                
+               <select class="form-control form-control-sm myselect" (change)="onTagChanged($event)" [(ngModel)]="selectedTag"> <option *ngFor="let x of tagNames;let i=index" [value]="x">{{x}}</option> </select>
+            </div>
+         </div>
+        </mat-toolbar-row>
+        <mat-toolbar-row *ngIf="activeTab=='upload'" color="accent">
+         <div>
+           Uploads &nbsp; | 
+           <button mat-button [class.active]="!updateFile" (click)="createNewFile()">New File</button> &nbsp; |
+           <button mat-button [class.active]="updateFile" (click)="updateOldFile()">Update Old File</button>
+         </div>
+         <div class="spacer"></div>
+         <div *ngIf="updateFile">                
+            <select class="form-control form-control-sm myselect" (change)="onTagChanged($event)" [(ngModel)]="selectedTag"> <option *ngFor="let x of tagNames;let i=index" [value]="x">{{x}}</option> </select>
+         </div>
+       </mat-toolbar-row>
+       
+        <mat-toolbar-row *ngIf="activeTab=='metadata'" color="accent"><div>Metadata &nbsp; | &nbsp;  </div></mat-toolbar-row>
+        <mat-toolbar-row *ngIf="activeTab=='setting'" color="accent"><div>Settings &nbsp; | &nbsp;  </div></mat-toolbar-row>
+       </mat-toolbar>
+       <div class="container-fluid pt-4" >
+         <div *ngIf="loaderService.isLoading | async" class="d-flex justify-content-center align-items-center loader-container" >
+            <mat-spinner color="primary" ></mat-spinner>
+          </div>
+        <router-outlet></router-outlet>
+       </div>
+   </div>

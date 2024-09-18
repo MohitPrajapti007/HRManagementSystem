@@ -1,0 +1,19 @@
+
+# Node modules folder
+node_modules/
+
+# Compiled output
+dist/
+
+
+# IDE specific files
+.vscode/
+
+
+# Angular specific files
+.angular/
+
+# Environment files (if sensitive)
+src/environments/environment.prod.ts
+src/environments/environment.ts
+

@@ -1,0 +1,221 @@
+<div class="table-row">
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Department List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="departmentSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="departmentData | searchFilter:departmentSearchTerm:'deptName'">
+        
+        <!-- Position Column -->
+        
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.deptName}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Designation List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="designationSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="designationData | searchFilter:designationSearchTerm:'desigName'">
+        
+        <!-- Position Column -->
+        
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Designation Name </th>
+
+          <td mat-cell *matCellDef="let element"> {{element.desigName}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Directorate List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="directorateSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="directorateData | searchFilter:directorateSearchTerm:'directorate'">
+
+        <!-- Position Column -->
+        
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Directorate Name </th>
+
+          <td mat-cell *matCellDef="let element"> {{element.directorate}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+</div>
+<div class="table-row">
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Discipline List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="disciplineSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="disciplineData | searchFilter:disciplineSearchTerm:'discipline'">
+        
+        <!-- Position Column -->
+        
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Discipline </th>
+          <td mat-cell *matCellDef="let element"> {{element.discipline}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Employ Group List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="empGroupSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="empGroupsData | searchFilter:empGroupSearchTerm:'name'">
+        
+        <!-- Position Column -->
+        
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+  
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Employ Function List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="functionSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="functionsData | searchFilter:functionSearchTerm:'name'">
+        
+        <!-- Position Column -->
+        
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+</div>
+<div class="table-row">
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Employ Grades List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="gradeSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="gradesData | searchFilter:gradeSearchTerm:'grade'">
+        
+        <!-- Position Column -->
+        
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Grade </th>
+          <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Location List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="locationsSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="locationsData | searchFilter:locationsSearchTerm:'location'">
+        
+        <!-- Position Column -->
+        
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Location </th>
+          <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="location_type">
+          <th mat-header-cell *matHeaderCellDef>Location type</th>
+          <td mat-cell *matCellDef="let element"> {{element.location_type}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="contg_loc_name">
+          <th mat-header-cell *matHeaderCellDef>Contigous Location</th>
+          <td mat-cell *matCellDef="let element"> {{element.contg_loc_name}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumn; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumn;"></tr>
+      </table>
+    </div>
+  </section>
+  <section class="example-container mat-elevation-z8" tabindex="0">
+    <div style="padding: 20px;"><b>Subfunctions List</b></div>
+    <hr>
+    <div class="search-container">
+      <input [(ngModel)]="subfunctionsSearchTerm" placeholder="Search by name" />
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="subfunctionsData | searchFilter:subfunctionsSearchTerm:'name'">
+        
+        <!-- Position Column -->
+        
+        
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </section>
+</div>

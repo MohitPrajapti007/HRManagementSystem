@@ -1,0 +1,569 @@
+<section [hidden]="selectedTagName=='' || selectedTagName =='-- SELECT --'">
+  <div style="float: right; display: block;">
+    <p class="mat-button-toggle-label">Gender:
+      <mat-button-toggle-group name="gender" aria-label="Gender" (change)="onToggleValChange($event, 'gender')"
+        value="All">
+        <mat-button-toggle value="All">All</mat-button-toggle>
+        <mat-button-toggle value="Male">Male</mat-button-toggle>
+        <mat-button-toggle value="Female">Female</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+    <p class="mat-button-toggle-label"> Status:
+      <mat-button-toggle-group name="employeestatus" aria-label="Employee Status"
+        (change)="onToggleValChange($event, 'employeestatus')" value="All">
+        <mat-button-toggle value="All">All</mat-button-toggle>
+        <mat-button-toggle value="Executive">Executive</mat-button-toggle>
+        <mat-button-toggle value="Non Executive">Non Executive</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+    <p class="mat-button-toggle-label">Mobility Constraints:
+      <mat-button-toggle-group name="mobilityconstraints" aria-label="Mobility Constraints"
+        (change)="onToggleValChange($event, 'mobilityConstraint')" value="All">
+        <mat-button-toggle value="All">All</mat-button-toggle>
+        <mat-button-toggle value="">Blank</mat-button-toggle>
+        <mat-button-toggle value="Yes">Yes</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+    <p class="mat-button-toggle-label">Sensitive Position:
+      <mat-button-toggle-group name="sensitivePosition" aria-label="Sensitive Position"
+        (change)="onToggleValChange($event, 'sensitivePosition')" value="All">
+        <mat-button-toggle value="All">All</mat-button-toggle>
+        <mat-button-toggle value="">Blank</mat-button-toggle>
+        <mat-button-toggle value="Yes">Yes</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+  </div><br><br>
+
+  <div class="row">
+    <div class="col-md-4 col-12" style="padding: 5px;">
+      <div class="col-12 canvas-holder mat-elevation-z8">
+        <div class="row px-2">
+          <div class="col-md-3 col-5">
+            <select class="form-control form-control-sm" style="width: auto; border: none;">
+              <option value="directorate">Directorate</option>
+            </select>
+          </div>
+          <div class="col-md-9 col-7">
+            <span class="form-control form-control-sm d-flex justify-content-end" style="width: auto; border: none;">
+              <div *ngIf="tableObj.table1SelectedItem!=''" role="button" (click)="table1ShowAll()">Show All</div>
+              <div role="button" class="ms-2"
+                (click)="downloadExcelByTableId('table1', 'directorate_employee_count.xlsx')"><i
+                  class="fas fa-file-export"></i></div>
+              <div role="button" class="ms-2" (click)="onToggleSortBtn('table1','alpha')"><i
+                  [ngClass]="classesatoz[0]==1?'fa-solid fa-arrow-up-a-z':'fa-solid fa-arrow-down-z-a'"></i></div>
+              <div role="button" class="ms-2" (click)="onToggleSortBtn('table1','numeric')"><i
+                  [ngClass]="classesoneto10[0]==1?'fa-solid fa-arrow-up-1-9':'fa-solid fa-arrow-down-9-1'"></i></div>
+            </span>
+          </div>
+        </div>
+        <!-- <canvas #chartArea style="display: none;"></canvas> -->
+        <div class="overflow-auto upper-table-container">
+          <table class="table table-responsive table-striped" id="table1">
+            <thead>
+              <tr class="d-none">
+                <th>Directorate</th>
+                <th>Count</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of tableObj.table1data;let index=index;"
+                [ngClass]="tableObj.table1SelectedItems[index]==data.directorate?'c-bg-success text-white':''"
+                (click)="onTable1RowClick(data, false, index)">
+                <td class="fs-12">{{data.directorate}}</td>
+                <td class="fs-12" style="text-align: right;">{{data.count}}</td>
+                <td class="d-flex p-1 fs-12" [title]="((data.count*100)/tableObj.table1totalcount|number:'1.2-2')+'%'">
+                  <app-progress-bar [value]="(data.count*100)/tableObj.table1totalcount"
+                    class="progress-bar"></app-progress-bar></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row px-2">
+
+          <!--           <div class="col-3 info-box">
+            <div>Willing<br>Choice</div>
+            <div>{{tableObj.table1willingChoice}}</div>
+          </div>
+          <div class="col-3 info-box">
+            <div>Mobility<br>Constraints</div>
+            <div>
+              ({{tableObj.table1mobilityConstraint.blank}}/{{tableObj.table1mobilityConstraint.yes}})</div>
+          </div> -->
+
+          <div class="col-md-6 col-12 info-box p-0">
+            <div class="row">
+              <div class="col-12">Employee</div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex">
+                <div class="col-4 info-box">
+                  <div>Count</div>
+                  <div>{{tableObj.table1count}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>(M/F)</div>
+                  <div>{{tableObj.table1gender.male}}/{{tableObj.table1gender.female}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>(E/NE)</div>
+                  <div>{{tableObj.table1empstatus.executive}}/{{tableObj.table1empstatus.nonexecutive}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-12 info-box p-0">
+            <div class="row">
+              <div class="col-12">Grades</div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex">
+                <div class="col-4 info-box">
+                  <div>E0-E3</div>
+                  <div>{{tableObj.table1gradecount.e0toe3}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>E4-E6</div>
+                  <div>{{tableObj.table1gradecount.e4toe6}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>E7-E9</div>
+                  <div>{{tableObj.table1gradecount.e7toe9}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-12" style="padding: 5px;">
+      <div class="col-12 canvas-holder mat-elevation-z8">
+        <div class="row px-2">
+          <div class="col-md-3 col-5">
+            <select class="form-control form-control-sm" style="width: auto; border: none;"
+              (change)="onSelectionChange1($event)" [(ngModel)]="selectedControl">
+              <option value="department">Department</option>
+              <option value="designation">Designation</option>
+              <option value="grade">Grade</option>
+              <option value="discipline">Discipline</option>
+              <option value="functionName">Function</option>
+              <option value="presentLocation">Location</option>
+            </select>
+          </div>
+          <div class="col-md-9 col-7">
+            <!--             <span class="form-control form-control-sm d-flex" style="width: auto; border: none;">
+              <div>{{rightSelectedTile}}</div>
+              <div *ngIf="rightSelectedTile!='All'" (click)="onChangeCalculateAllRightChart($event, true)" role="button" class="ms-auto">Show All</div>
+            </span> -->
+            <span class="form-control form-control-sm d-flex justify-content-end" style="width: auto; border: none;">
+              <div *ngIf="tableObj.table2SelectedItem!=''" role="button" (click)="table2ShowAll()">Show All</div>
+              <div role="button" class="ms-2"
+                (click)="downloadExcelByTableId('table2', 'employee_count_table2.xlsx')"><i
+                  class="fas fa-file-export"></i></div>
+              <div role="button" class="ms-2" (click)="onToggleSortBtn('table2','alpha')"><i
+                  [ngClass]="classesatoz[1]==1?'fa-solid fa-arrow-up-a-z':'fa-solid fa-arrow-down-z-a'"></i></div>
+              <div role="button" class="ms-2" (click)="onToggleSortBtn('table2','numeric')"><i
+                  [ngClass]="classesoneto10[1]==1?'fa-solid fa-arrow-up-1-9':'fa-solid fa-arrow-down-9-1'"></i></div>
+            </span>
+          </div>
+
+        </div>
+        <!-- <canvas #chartArea2 style="display: none;"></canvas> -->
+        <div class="overflow-auto upper-table-container">
+          <table class="table table-responsive table-striped" id="table2">
+            <tbody>
+              <tr *ngFor="let data of tableObj.table2data;let index=index"
+                [ngClass]="tableObj.table2SelectedItems[index]==data[selectedControl]?'c-bg-success text-white':''"
+                (click)="onTable2RowClick(data,false,index)">
+                <td class="fs-12">{{data[selectedControl]}}</td>
+                <td class="fs-12" style="text-align: right;">{{data.count}}</td>
+                <td class="d-flex p-1 fs-12" [title]="((data.count*100)/tableObj.table1count|number:'1.2-2')+'%'">
+                  <app-progress-bar [value]="(data.count*100)/tableObj.table1count"
+                    class="progress-bar"></app-progress-bar></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row px-2">
+          <div class="col-md-6 col-12 info-box p-0">
+            <div class="row">
+              <div class="col-12">Employee</div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex">
+                <div class="col-4 info-box">
+                  <div>Count</div>
+                  <div>{{tableObj.table2count}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>(M/F)</div>
+                  <div>{{tableObj.table2gender.male}}/{{tableObj.table2gender.female}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>(E/NE)</div>
+                  <div>{{tableObj.table2empstatus.executive}}/{{tableObj.table2empstatus.nonexecutive}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-12 info-box p-0">
+            <div class="row">
+              <div class="col-12">Grades</div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex">
+                <div class="col-4 info-box">
+                  <div>E0-E3</div>
+                  <div>{{tableObj.table2gradecount.e0toe3}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>E4-E6</div>
+                  <div>{{tableObj.table2gradecount.e4toe6}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>E7-E9</div>
+                  <div>{{tableObj.table2gradecount.e7toe9}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-4 col-12" style="padding: 5px;">
+      <div class="col-12 canvas-holder mat-elevation-z8">
+        <div class="row px-2">
+          <div class="col-md-3 col-5">
+            <select class="form-control form-control-sm" style="width: auto; border: none;"
+            (change)="onSelectionChange2($event)" [(ngModel)]="selectedControl2">
+              <option value="presentLocation">Location</option>
+              <option value="department">Department</option>
+              <option value="designation">Designation</option>
+              <option value="grade">Grade</option>
+              <option value="discipline">Discipline</option>
+              <option value="functionName">Function</option>
+            </select>
+          </div>
+          <div class="col-md-9 col-7">
+            <!--             <span class="form-control form-control-sm d-flex" style="width: auto; border: none;">
+              <div>{{selectedLocationTile}}</div>
+              <div *ngIf="selectedLocationTile!='All'" (click)="onChangeCalculateLocationChart($event,[], true)" role="button" class="ms-auto">Show All</div>
+            </span> -->
+            <span class="form-control form-control-sm d-flex justify-content-end" style="width: auto; border: none;">
+              <div role="button" class="ms-2"
+                (click)="downloadExcelByTableId('table3', 'employee_count_table3.xlsx')"><i
+                  class="fas fa-file-export"></i></div>
+              <div role="button" class="ms-2" (click)="onToggleSortBtn('table3','alpha')"><i
+                  [ngClass]="classesatoz[2]==1?'fa-solid fa-arrow-up-a-z':'fa-solid fa-arrow-down-z-a'"></i></div>
+              <div role="button" class="ms-2" (click)="onToggleSortBtn('table3','numeric')"><i
+                  [ngClass]="classesoneto10[2]==1?'fa-solid fa-arrow-up-1-9':'fa-solid fa-arrow-down-9-1'"></i></div>
+            </span>
+          </div>
+
+        </div>
+        <!-- <canvas #chartLocation style="display:none"></canvas> -->
+        <div class="overflow-auto upper-table-container">
+          <table class="table table-responsive table-striped" id="table3">
+            
+            <tbody>
+              <tr *ngFor="let data of tableObj.table3data"
+                [ngClass]="tableObj.table3SelectedItem==data[selectedControl2]?'c-bg-success text-white':''"
+                (click)="onTable3RowClick(data)">
+                <td class="fs-12">{{data[selectedControl2]}}</td>
+                <td class="fs-12" style="text-align: right;">{{data.count}}</td>
+                <td class="d-flex p-1 fs-12" [title]="((data.count*100)/tableObj.table2count|number:'1.2-2')+'%'">
+                  <app-progress-bar [value]="(data.count*100)/tableObj.table2count"
+                    class="progress-bar"></app-progress-bar></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row px-2">
+          <div class="col-md-6 col-12 info-box p-0">
+            <div class="row">
+              <div class="col-12">Employee</div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex">
+                <div class="col-4 info-box">
+                  <div>Count</div>
+                  <div>{{tableObj.table3count}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>(M/F)</div>
+                  <div>{{tableObj.table3gender.male}}/{{tableObj.table3gender.female}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>(E/NE)</div>
+                  <div>{{tableObj.table3empstatus.executive}}/{{tableObj.table3empstatus.nonexecutive}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-12 info-box p-0">
+            <div class="row">
+              <div class="col-12">Grades</div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex">
+                <div class="col-4 info-box">
+                  <div>E0-E3</div>
+                  <div>{{tableObj.table3gradecount.e0toe3}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>E4-E6</div>
+                  <div>{{tableObj.table3gradecount.e4toe6}}</div>
+                </div>
+                <div class="col-4 info-box">
+                  <div>E7-E9</div>
+                  <div>{{tableObj.table3gradecount.e7toe9}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--
+    <section tabindex="0" [hidden]="dataSource.length==0">
+      <div class="row px-2 mb-3">
+        <div class="col-6 d-flex">
+          <div >
+            Directorate: {{selectedDirectorateModel? 'All' : selectedDirectorate}}
+        </div>
+        <div class="ms-auto"> 
+          <input type="checkbox" [(ngModel)]="selectedDirectorateModel" (change)="onChangeCalculateAllDirectorate($event)"/>
+        </div>
+        </div>
+          <div class="col-6 d-flex">
+            <div>
+              Selected: {{ selectedControl }}, Tile: {{rightSelectedTile}}
+          </div> 
+          <div class="ms-auto"> 
+            <input type="checkbox" [(ngModel)]="selectedTileModel" (change)="onChangeCalculateAllRightChart($event)"/>
+          </div>
+        </div>
+        <div class="col-6 canvas-holder mat-elevation-z8 h-100">
+          <canvas #chartArea></canvas>
+        </div>
+        <div class="col-6 canvas-holder mat-elevation-z8">
+          <select class="form-control form-control-sm" (change)="onSelectionChange($event)" [(ngModel)]="selectedControl">
+            <option value="department">Department</option>
+            <option value="designation">Designation</option>
+            <option value="grade">Grade</option>
+            <option value="discipline">Discipline</option>
+            <option value="functionName">Function</option>
+          </select>      
+          <canvas #chartArea2></canvas>
+          <div class="col-3"><div>Total Employee<div></div>{{subChartCountObject.totalEmployee}}</div></div>
+          <div class="col-3"><div>Willing Choice<div></div>{{subChartCountObject.willingChoice}}</div></div>
+          Mobility Constraints: {{this.subChartCountObject.mobilityConstraint.total}} ({{this.subChartCountObject.mobilityConstraint.blank}}/{{this.subChartCountObject.mobilityConstraint.yes}})
+          Gender(M/F): {{subChartCountObject.gender}} ({{subChartCountObject.maleGender}}/{{subChartCountObject.femaleGender}})
+        </div>
+      </div>
+      
+      </section>
+    
+    -->
+  <div class="row">
+    <div class="col-md-6 col-12" style="padding: 5px;">
+      <section class="col-12 canvas-holder mat-elevation-z8" style="margin-top: 20px; margin-bottom: 20px;">
+        <div class="d-md-flex justify-content-between p-2">
+          <div class="m-md-0 m-2">
+            <b>Employee List</b>
+            <span role="button" style="margin-left: 5px; cursor: pointer;" (click)="downloadExcelByTableFilter('table4', 'Filtered_Employee_List.xlsx')">
+              <i class="fas fa-file-export"></i>
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-sm-9 input-group">
+              <input type="text" [(ngModel)]="searchKeyModel" class="form-control rounded-0 me-1"
+                placeholder="Search by name" style="height: 30px">
+              <input type="text" [(ngModel)]="searchIdModel" class="form-control rounded-0 me-1"
+                placeholder="Search by ID(CPF)" style="height: 30px">
+              <div class="input-group-append d-flex">
+                <button mat-flat-button class="btn square-border-button" (click)="onMatTabChange(selectedTabEvent)">
+                  Find
+                </button>
+                <button mat-flat-button class="btn square-border-button" (click)="clearSearch()">
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr style="margin: 0;">
+        <mat-tab-group animationDuration="0ms" (selectedTabChange)="onMatTabChange($event)">
+          <mat-tab label="Selected">
+            <div class="table-container" style="height: 600px;">
+              <table class="table table-responsive" id="table4">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of tableData;let index=index;" (click)="onTableRowClick(d,index)"
+                    [class.highlighted-row]="selectedIndex==index">
+                    <td>{{d.id}}</td>
+                    <td>{{d.name}}</td>
+                    <td>{{d.designation}}</td>
+                    <td>{{d.department}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-tab>
+          <mat-tab label="All">
+            <div class="table-container" style="height: 600px;">
+              <table class="table table-responsive">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of searchedData;let index=index;" (click)="onTableRowClick(d,index)"
+                    [class.highlighted-row]="selectedIndex==index">
+                    <td>{{d.id}}</td>
+                    <td>{{d.name}}</td>
+                    <td>{{d.designation}}</td>
+                    <td>{{d.department}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+
+      </section>
+    </div>
+
+
+    <div class="col-md-6 col-12" style="padding: 5px;">
+      <section class="col-12 canvas-holder mat-elevation-z8"
+        style="margin-top: 20px; margin-bottom: 20px;height: 510px;">
+        <div class="chart-container" *ngIf="selectedPlacementHistorydata">
+          <div style="padding: 10px;margin-bottom: -12px;">
+            <b>Employee Details</b>
+          </div>
+          <hr>
+
+          <div class="row">
+          <div class="col-md-6">
+          <table style="font-size: 10px;margin-left: 20px;">
+            <tr>
+              <th>Id:</th>
+              <td>{{selectedPlacementHistorydata.id}}</td>
+            </tr>
+            <tr>
+              <th>Name:</th>
+              <td>{{selectedPlacementHistorydata.name}}</td>
+            </tr>
+            <tr>
+              <th>Designation</th>
+              <td>{{selectedPlacementHistorydata.designation}}</td>
+            </tr>
+            <tr>
+              <th>Department</th>
+              <td>{{selectedPlacementHistorydata.department}}</td>
+            </tr>
+            <tr>
+              <th>Discipline</th>
+              <td>{{selectedPlacementHistorydata.discipline}}</td>
+            </tr>
+            <tr>
+              <th>Directorate</th>
+              <td>{{selectedPlacementHistorydata.directorate}}</td>
+            </tr>
+            <tr>
+              <th>Present Location</th>
+              <td>{{selectedPlacementHistorydata.presentLocation}}</td>
+            </tr>
+            <tr>
+              <th>Grade</th>
+              <td>{{selectedPlacementHistorydata.grade}}</td>
+            </tr>
+            <tr>
+              <th>Mobility Constraints</th>
+              <td>{{selectedPlacementHistorydata.mobilityConstraint === 'Yes' ? 'Yes' : 'No'}}</td>
+            </tr>
+            <tr>
+              <th>Employee Status</th>
+              <td>{{selectedPlacementHistorydata.empStatus}}</td>
+            </tr>
+            
+            
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table style="font-size: 10px;margin-left: 20px;">
+            <tr>
+              <th>Function</th>
+              <td>{{selectedPlacementHistorydata.functionName}}</td>
+            </tr>
+            
+            <tr>
+              <th>
+                Placement History
+              </th>
+              <td>{{selectedPlacementHistorydata.placementHistoryYears}}</td>
+            </tr>
+            <tr>
+              <th>
+                Proposed Location
+              </th>
+              <td>{{selectedPlacementHistorydata.proposedLocation}}</td>
+            </tr>
+            <tr>
+              <th>Eligible</th>
+              <td>
+                <span *ngIf="selectedPlacementHistorydata.eligible === 1; else notEligible">TRUE AS PER RULES APPLIED</span>
+                <ng-template #notEligible>FALSE AS PER RULES APPLIED</ng-template>
+              </td>
+            </tr>
+            <tr>
+              <th>Action</th>
+              <td>
+                <span *ngIf="selectedPlacementHistorydata.actionFlag === true; else notApplied">APPLIED ({{selectedPlacementHistorydata.actionValue}})</span>
+                <ng-template #notApplied>NOT APPLIED </ng-template>
+              </td>
+            </tr>
+            <tr>
+              <th>Filer</th>
+              <td>
+                <span *ngIf="selectedPlacementHistorydata.filterFlag === true; else notFiltered">TRUE AS PER FILTER APPLIED</span>
+                <ng-template #notFiltered>FALSE AS PER FILTER APPLIED</ng-template>
+              </td>
+            </tr>
+            <tr>
+              <th>Gender</th>
+              <td>{{selectedPlacementHistorydata.gender}}</td>
+            </tr>
+            <tr>
+              <th>Age</th>
+              <td>{{selectedPlacementHistorydata.age}}</td>
+            </tr>
+            
+          </table>
+        </div>
+      </div>
+          <div id="productChart" style="width: 100%; height: 330px;margin-top: -10px;"></div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,141 @@
+tr.example-detail-row {
+    height: 0;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):hover {
+    background: whitesmoke;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+  
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+  .example-element-diagram {
+    min-width: 80px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
+  }
+  
+  .example-element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+  }
+  
+  .example-element-description {
+    padding: 16px;
+  }
+  
+  .example-element-description-attribution {
+    opacity: 0.5;
+  }
+
+  .nested-table-loader {
+    position: absolute!important;
+    margin-top: 80px!important;
+    left: 50%!important;
+    z-index: 1000!important;
+  }
+  tr.mat-mdc-footer-row td {
+    font-weight: bold;
+  }
+
+  tr.example-detail-row {
+    height: 0;
+  }
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  .inner-table-container .inner-table {
+    position: relative;
+  }
+  
+  .inner-table-container {
+    position: relative;
+    min-height: 200px;
+    max-height: 400px;
+    overflow: auto;
+  }
+  .table-container {
+    max-height: 490px; /* Set the maximum height for the table */
+    overflow-y: auto; /* Enable vertical scrollbar when the content exceeds the container height */
+  }
+  .red-row {
+    background-color: rgb(226, 168, 168); 
+  }
+  
+  .green-row {
+    background-color: rgb(182, 228, 182); 
+  }
+
+  .btn-over-table {
+    position: absolute;
+    z-index: 1000;
+    /* top: 2px; */
+  }
+  .mat-button-toggle-label{
+    display: inline;
+    padding-left: 475px;
+    
+  }
+  .mat-button-toggle-group {
+    height: 28px;
+    align-items: center;
+  }
+  .mat-button-toggle-group[name="grade"] .mat-button-toggle-checked {
+    background-color: #69ea7c;
+    color: white;
+  }
+  .mat-button-toggle-group[name="discipline"] .mat-button-toggle-checked {
+    background-color: #69ea7c;
+    color: white;
+  }
+  .sticky-row-info {
+    position: sticky;
+    bottom: 0;
+    background-color: white; /* Set background color if needed */
+    padding: 5px;
+    height: 30px; /* Adjust padding as per your design */
+  }
+  .highlighted-row {
+    background-color: rgb(226, 226, 218); /* Change the background color to your desired shade */
+  }
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .custom-mat-form-field {
+    height: 50px;/* Adjust the height as per your requirement */
+    margin-bottom: -20px;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px; /* Adjust as needed for spacing between dots */
+  }
+  
+  .red {
+    background-color: rgb(226, 168, 168);
+  }
+  
+  .green {
+    background-color: rgb(182, 228, 182);
+  }

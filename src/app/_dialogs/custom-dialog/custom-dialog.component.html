@@ -1,0 +1,272 @@
+
+<div mat-dialog-title class="dialog-title mb-4" color="accent">
+  <span> <i class="fa-solid fa-circle-check"></i>&nbsp;&nbsp;{{header}}</span>
+  <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+    <mat-icon class="close-icon" color="warn">close</mat-icon>
+  </button> 
+</div>
+
+<mat-dialog-content [id]="dialogContentId" >
+
+    <form *ngIf="data.subdata.subject=='rule'" [formGroup]="myForm" (ngSubmit)="onSubmitRule()">
+      <div class="row mb-2" formArrayName="rules" *ngFor="let item of rules.controls; let i = index;">
+        <div [formGroupName]="i" class="col-12" style="padding:5px">
+          <div class="col"><mat-slide-toggle formControlName="ruleApply" >{{item.value.description}}</mat-slide-toggle></div>          
+          <div *ngIf="item.value.id == 7 && item.value.ruleApply" class="col-9" style="margin-top: 1px;margin-left: 40px;">
+            <input placeholder="Value" formControlName="ruleValue" matInput>
+          </div>       
+          <div *ngIf="item.value.id == 16 && item.value.ruleApply" class="col-9" style="margin-top: 1px;margin-left: 40px;">
+            <input placeholder="Value" formControlName="ruleValue" matInput>
+          </div>    
+          <div *ngIf="item.value.id == 17 && item.value.ruleApply" class="col-9" style="margin-top: 1px;margin-left: 40px;">
+            <input placeholder="Value" formControlName="ruleValue" matInput>
+          </div>
+          <div *ngIf="(item.value.id == 8) && item.value.ruleApply">
+            <div class="offset-1 col-11">
+              <select formControlName="sensitivePostingValue" class="form-control form-control-sm" (change)="onSelectChange($event, 0)">
+                <option value="0">Select a Value</option>
+                <option value="1" [disabled]="(selectedValues[1]==1 || selectedValues[2]==1 || selectedValues[3]==1) && selectedValues[0]!=1">1</option>
+                <option value="2" [disabled]="(selectedValues[1]==2 || selectedValues[2]==2 || selectedValues[3]==2) && selectedValues[0]!=2">2</option>
+                <option value="3" [disabled]="(selectedValues[1]==3 || selectedValues[2]==3 || selectedValues[3]==3) && selectedValues[0]!=3">3</option>
+                <option value="4" [disabled]="(selectedValues[1]==4 || selectedValues[2]==4 || selectedValues[3]==4) && selectedValues[0]!=4">4</option>
+              </select>
+            </div>
+
+          </div>
+          <div *ngIf="(item.value.id == 6 )&& item.value.ruleApply">
+            <div class="offset-1 col-11">
+              <select formControlName="transferOrderValue" class="form-control form-control-sm" (change)="onSelectChange($event, 1)" >
+                <option value="0">Select a Value</option>
+                <option value="1" [disabled]="(selectedValues[0]==1 || selectedValues[2]==1 || selectedValues[3]==1) && selectedValues[1]!=1">1</option>
+                <option value="2" [disabled]="(selectedValues[0]==2 || selectedValues[2]==2 || selectedValues[3]==2) && selectedValues[1]!=2">2</option>
+                <option value="3" [disabled]="(selectedValues[0]==3 || selectedValues[2]==3 || selectedValues[3]==3) && selectedValues[1]!=3">3</option>
+                <option value="4" [disabled]="(selectedValues[0]==4 || selectedValues[2]==4 || selectedValues[3]==4) && selectedValues[1]!=4">4</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="(item.value.id == 4) && item.value.ruleApply" >
+            <div class="offset-1 col-11">
+              <select formControlName="hardLocationServedValue" class="form-control form-control-sm" (change)="onSelectChange($event, 2)">
+                <option value="0">Select a Value</option>
+                <option value="1" [disabled]="(selectedValues[1]==1 || selectedValues[0]==1 || selectedValues[3]==1) && selectedValues[2]!=1">1</option>
+                <option value="2" [disabled]="(selectedValues[1]==2 || selectedValues[0]==2 || selectedValues[3]==2) && selectedValues[2]!=2">2</option>
+                <option value="3" [disabled]="(selectedValues[1]==3 || selectedValues[0]==3 || selectedValues[3]==3) && selectedValues[2]!=3">3</option>
+                <option value="4" [disabled]="(selectedValues[1]==4 || selectedValues[0]==4 || selectedValues[3]==4) && selectedValues[2]!=4">4</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="(item.value.id == 15) && item.value.ruleApply">
+            <div class="offset-1 col-11">
+              <select formControlName="rule4Value" class="form-control form-control-sm" (change)="onSelectChange($event, 3)">
+                <option value="0">Select a Value</option>
+                <option value="1" [disabled]="(selectedValues[1]==1 || selectedValues[2]==1 || selectedValues[0]==1) && selectedValues[3]!=1">1</option>
+                <option value="2" [disabled]="(selectedValues[1]==2 || selectedValues[2]==2 || selectedValues[0]==2) && selectedValues[3]!=2">2</option>
+                <option value="3" [disabled]="(selectedValues[1]==3 || selectedValues[2]==3 || selectedValues[0]==3) && selectedValues[3]!=3">3</option>
+                <option value="4" [disabled]="(selectedValues[1]==4 || selectedValues[2]==4 || selectedValues[0]==4) && selectedValues[3]!=4">4</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="button-container" style="position: absolute; bottom: 10px; right: 20px;">
+        <button mat-flat-button color="primary" [disabled]="data.enable">Save</button>
+      </div>
+    </form>
+
+    <form *ngIf="data.subdata.subject=='filter'" [formGroup]="filterForm" (ngSubmit)="onSubmitFilter()">
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+      
+      <div class="row mb-2">
+          <div class="col-md-4"><label>Department</label></div><div class="col-md-8">
+            <mat-select formControlName="departmentIds" class="form-control form-control-sm" multiple >
+              <mat-select-trigger>
+                {{ getSelectedValueLabel('departmentIds', ff['departmentIds'].value[0]) }}
+                <span *ngIf="(ff['departmentIds'].value?.length || 0) > 1" class="example-additional-selection">
+                  (+{{(ff['departmentIds'].value?.length || 0) - 1}} {{ff['departmentIds'].value?.length === 2 ? 'other' : 'others'}})
+                </span>
+              </mat-select-trigger>
+              <mat-option [value]="'all'" (click)="selectAllDepartments()">SELECT ALL</mat-option>
+              <mat-option *ngFor="let dept of departments" [disabled]="data.enable" [value]="dept.id">{{dept.deptName}}</mat-option>
+            </mat-select>
+          </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Directorate</label></div><div class="col-md-8">
+          <mat-select formControlName="directorateIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('directorateIds', ff['directorateIds'].value?.[0])}}
+              <span *ngIf="(ff['directorateIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['directorateIds'].value?.length || 0) - 1}} {{ff['directorateIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllDirectorates()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of directorates" [disabled]="data.enable" [value]="dept.id">{{dept.directorate}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Discipline</label></div><div class="col-md-8">
+          <mat-select formControlName="disciplineIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('disciplineIds', ff['disciplineIds'].value?.[0])}}
+              <span *ngIf="(ff['disciplineIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['disciplineIds'].value?.length || 0) - 1}} {{ff['disciplineIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllDisciplines()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of disciplines" [disabled]="data.enable" [value]="dept.id">{{dept.discipline}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Designation</label></div><div class="col-md-8">
+          <mat-select formControlName="designationIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('designationIds', ff['designationIds'].value?.[0])}}
+              <span *ngIf="(ff['designationIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['designationIds'].value?.length || 0) - 1}} {{ff['designationIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllDesignations()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of designations" [disabled]="data.enable" [value]="dept.id">{{dept.desigName}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Function</label></div><div class="col-md-8">
+          <mat-select formControlName="functionIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('functionIds',ff['functionIds'].value?.[0])}}
+              <span *ngIf="(ff['functionIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['functionIds'].value?.length || 0) - 1}} {{ff['functionIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllFunctions()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of functions" [disabled]="data.enable" [value]="dept.id">{{dept.name}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div *ngIf="false" class="row mb-2" >
+        <div class="col-md-4"><label>Sub Function</label></div><div class="col-md-8">
+          <mat-select formControlName="subFunctionIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('subFunctionIds',ff['subFunctionIds'].value?.[0])}}
+              <span *ngIf="(ff['subFunctionIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['subFunctionIds'].value?.length || 0) - 1}} {{ff['subFunctionIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllSubFunctions()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of subfunctions" [disabled]="data.enable" [value]="dept.id">{{dept.name}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Emp Status</label></div><div class="col-md-8">
+          <mat-select formControlName="empStatusIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('empStatusIds',ff['empStatusIds'].value?.[0])}}
+              <span *ngIf="(ff['empStatusIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['empStatusIds'].value?.length || 0) - 1}} {{ff['empStatusIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllempStatus()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of empStatus" [disabled]="data.enable" [value]="dept.id">{{dept.name}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Emp Group</label></div><div class="col-md-8">
+          <mat-select formControlName="empGroupIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('empGroupIds',ff['empGroupIds'].value?.[0])}}
+              <span *ngIf="(ff['empGroupIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['empGroupIds'].value?.length || 0) - 1}} {{ff['empGroupIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllEmpGroups()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of empGroups" [disabled]="data.enable" [value]="dept.id">{{dept.name}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Grade</label></div><div class="col-md-8">
+          <mat-select formControlName="gradeIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('gradeIds',ff['gradeIds'].value?.[0])}}
+              <span *ngIf="(ff['gradeIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['gradeIds'].value?.length || 0) - 1}} {{ff['gradeIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllGrades()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of grades" [disabled]="data.enable" [value]="dept.id">{{dept.grade}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Location</label></div><div class="col-md-8">
+          <mat-select formControlName="locationIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('locationIds',ff['locationIds'].value?.[0])}}
+              <span *ngIf="(ff['locationIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['locationIds'].value?.length || 0) - 1}} {{ff['locationIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="'all'" (click)="selectAllLocations()">SELECT ALL</mat-option>
+            <mat-option *ngFor="let dept of locations" [disabled]="data.enable" [value]="dept.id">{{dept.location}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row mb-2" >
+        <div class="col-md-4"><label>Gender</label></div><div class="col-md-8">
+          <mat-select formControlName="genderIds" class="form-control form-control-sm" multiple>
+            <mat-select-trigger>
+              {{getSelectedValueLabel('genderIds',ff['genderIds'].value?.[0])}}
+              <span *ngIf="(ff['genderIds'].value?.length || 0) > 1" class="example-additional-selection">
+                (+{{(ff['genderIds'].value?.length || 0) - 1}} {{ff['genderIds'].value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let dept of metadata.genders" [disabled]="data.enable" [value]="dept.id">{{dept.name}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="button-container" style="position: absolute; bottom: 10px; right: 20px;">
+        <button mat-flat-button color="primary" [disabled]="data.enable">Save</button>
+      </div>
+    </form>
+
+    <form *ngIf="data.subdata.subject=='action' && data.subdata.selectRows && data.subdata.selectRows.length>0" [formGroup]="actionForm" (ngSubmit)="onSubmitAction()">
+      <div class="row mb-2">
+        <mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group mb-2"
+        formControlName="actionId">
+        <mat-radio-button class="example-radio-button" *ngFor="let act of actions" [value]="act.id" (change)="radioChange($event)">
+          {{act.actionName}}
+        </mat-radio-button>
+        <mat-select  *ngIf="selectedRadioValue==3" class="form-control form-control-sm" formControlName="specificLocation" multiple (selectionChange)="selectionChange($event)">
+          <mat-select-trigger>
+            {{selectedLocationsAction}}
+          </mat-select-trigger>
+          <mat-option *ngFor="let dept of locations" [value]="dept.location" (onSelectionChange)="optionChange($event)">{{dept.location}}</mat-option>
+        </mat-select>
+        
+        <span class="text-danger" *ngIf="actionForm.controls['specificLocation'].hasError('required')">Please select a location</span>
+        <span class="text-danger" *ngIf="actionForm.controls['specificLocation']?.errors?.['Error']">
+          {{ actionForm.controls['specificLocation'].errors?.['Message'] ?? '' }}
+        </span>
+
+      </mat-radio-group>
+      </div> 
+      <div class="row mb-2 px-3">
+        <textarea class="form-control form-control-sm" formControlName="comment" placeholder="comment..."></textarea>
+      </div>
+
+      <div class="button-container" style=" bottom: 10px; right: 20px;">
+        <button mat-flat-button color="primary">Save</button>
+      </div>
+    </form>
+    <div *ngIf="data.subdata.subject=='action' && data.subdata.selectRows.length==0" class="row">No records selected</div>
+</mat-dialog-content>

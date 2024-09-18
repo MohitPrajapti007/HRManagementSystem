@@ -1,0 +1,8 @@
+.close-button{
+    float: right;
+    top:2px;
+    right:-24px;
+    background-color:#4454cc;
+    color:aliceblue;
+    border: none;
+  }

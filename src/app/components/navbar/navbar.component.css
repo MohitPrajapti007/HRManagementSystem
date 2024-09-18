@@ -1,0 +1,44 @@
+.wrapper.default-theme nav.navbar {
+    background: #242939;
+    border-color: rgba(110,120,153,.3);
+}
+
+.wrapper nav.navbar {
+    height: 60px;
+    padding: 0;
+    border-bottom: 1px solid;
+}
+.fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+.flex-fill {
+    flex: 1 1 auto!important;
+}
+@media (min-width: 768px)
+{
+    .navbar-expand-md {
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+    }
+    .navbar {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+    }
+}
+.login-role {
+    position: absolute;
+    right: 20px;
+}
+
+.bg-navbar {
+    background-image: linear-gradient(to left,#42275a, #734b6d)!important;
+    box-shadow: 1px 2px 4px #9aa0b9;
+}

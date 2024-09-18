@@ -1,0 +1,66 @@
+<div class="container-fluid mb-5 h-100 d-flex justify-content-center align-items-center">
+	<div class="row mb-5">
+		<div class="mx-auto mt-5">
+			<div class="box-form">
+				<div class="left">
+					<div class="overlay">
+						<!-- <img src="assets/gail-logo-263.png"/> -->
+						<!-- <img src="assets/gail-logo-path-01.png"/> -->
+						<div style="margin-top: 285px"></div>
+						<H1 style="font-size: 30px;">HRMS</H1>
+						<h2>Management System for Human Resource</h2>
+
+					</div>
+				</div>
+
+				<div class="right">
+					<img style="align-items: center;height: 100px;" src="assets/hrms.png" />
+					<h5 style="font-size: 18px;margin-top: 30px;">Login</h5>
+					<!-- <p>Don't have an account? <a href="#">Creat Your Account</a> it takes less than a minute</p> -->
+					<form [formGroup]="loginform" (ngSubmit)="onSubmit(loginform.value)">
+						<div class="inputs mt-4">
+							<div class="row">
+								<div class="col-12">
+									<input type="text" placeholder="Username" formControlName="email" required>
+									<div class="text-danger" *ngIf="lf['email'].invalid && (lf['email'].dirty || lf['email'].touched)">
+										<small *ngIf="lf['email'].errors?.['required']">
+											username is required
+										</small>
+										<small *ngIf="lf['email'].errors?.['error']">{{lf['email'].errors?.['message']}}</small>
+									</div>
+									<div *ngIf="!(lf['email'].invalid && (lf['email'].dirty || lf['email'].touched))">&nbsp;</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<input type="password" placeholder="Password" formControlName="password" autocomplete="off" required>
+									<div class="text-danger" *ngIf="lf['password'].invalid && (lf['password'].dirty || lf['password'].touched)">
+										<small *ngIf="lf['password'].errors?.['required']">password is required</small>
+									</div>
+									<div *ngIf="!(lf['password'].invalid && (lf['password'].dirty || lf['password'].touched))">&nbsp;</div>
+								</div>
+							</div>							
+						</div>
+						<br><br>
+						<div class="remember-me--forget-password">
+							<!-- Angular -->
+							<!-- <label>
+								<input type="checkbox" name="item" checked/>
+								<span class="text-checkbox">Remember me</span>
+							</label>
+						<p>forget password?</p> -->
+						</div>
+						<br>
+						<button>Login</button>
+					</form>
+				</div>
+			</div>
+			<!-- partial -->
+			<div class="disclaimer text-center d-flex justify-content-center align-items-center">
+				This program has restricted access, and only authorized users are supposed to use it.
+				<br>Suitable action shall be taken against any unauthorized access to this portal. All IP addresses and other information are being recorded.
+			</div>
+			
+		</div>
+	</div>
+</div>
